@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study of Example-based Programming</title>
+    <link href="css/main.css" rel="stylesheet" type="text/css"/>
+    <!-- LIBRARIES -->
+    <script src="js/lib/jquery-2.0.3.min.js" type="text/javascript"></script>
+    <script src="js/lib/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <!-- HANDSONTABLE: EDITABLE SPREADSHEET API -->
+    <script type="text/javascript" src="http://handsontable.com/dist/handsontable.full.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://handsontable.com/dist/handsontable.full.css">
+    <!-- MAIN JS CODE-->
+    <script id="main" src="js/main.js" type="text/javascript"></script>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script id="taskData" src="js/taskData.js" type="text/javascript"></script>
+    <script id="task" src="js/task.js" type="text/javascript"></script>
+    <script id="crowdPlanner" src="js/crowdPlanner.js" type="text/javascript"></script>
+    <script>
+      mode = "{{mode}}";
+    </script>
+</head>
+<body>
+
+
+
+<div class='introduction'>
+<h2>Study of Example-based Programming</h1>
+<p>Thanks for your participation. We are researchers from the University of Maryland investigating how people describe programs via examples. This study consists of tutorials followed by actual tasks, which will take around 25 minutes. There will be a short questionnaires at the end. After all, do not forget to copy and paste completion code to complete the HIT.</p>
+
+<p>Please read this <a target='_blank' href='css/irb.pdf'>consent form</a>. If you have any questions about this study, contact Tak Yeon Lee (http://tylee-portfolio.herokuapp.com/).</p>
+
+<button onClick='skipToTutorial();'>skip to tutorial</button>
+<button onClick='skipToTask();'>skip to tasks</button>
+<button onClick='skipToScreening();'>skip to questionnaire</button>
+
+<p>To participate, please press "Yes, I agree" button below.
+</p>
+<center>
+    <button style='padding:5px; width:200px;' class='start_button'>Yes, I agree</button>
+    <script>
+    	$("button.start_button").click(function(){
+    		$(".introduction").addClass("hidden");
+    		$(".tutorial_container").removeClass("hidden");
+        Log.push({
+          event:"OPEN_SECTION", 
+          tid: "tutorial_1",
+          summary:"OPEN_SECTION, tutorial_1",
+          detail: {},
+          timestamp:Date.now()
+        });
+    	});
+    </script>
+<center>
+</div>
+
+<div class='tutorial_container hidden'>
+  <div class='instruction'>
+    <p>The purpose of programming is to teach computer how to perform a task. Traditionally, programmers do this by writing out instructions. But as an alternative approach, Programming-by-Example enables people to teach computer with <em>examples of input and output</em>, and then the computer will <em>infer programs that calculate the outputs for the inputs</em>. For instance, to teach computer a program that multiplies any number by five, you can give an example (Input:1, Output:5). Then the computer will infer programs such as <span class='txt_program'>Input * 5</span> that calculates 5 for 1.</p>
+    <p>In this study, we are going to ask you to teach computer a few tasks by providing examples. If you provide <em>sufficient and thoughtful examples</em>, the computer will effectively infer a <em>single program that performs the task for a wide range of inputs</em> beyond the cases that you provide. Don't worry much now. You will learn how to do it while following tutorials.</p>
+  </div>
+	<div class='section' tid='tutorial_1'></div> 
+  <div class='section hidden' tid='tutorial_2'></div>
+  <div class='section hidden' tid='tutorial_3'></div>
+  <div class='section hidden' tid='tutorial_3_2'></div>
+  <div class='section hidden' tid='tutorial_4'></div> 
+  <div class='section hidden' tid='tutorial_4_2'></div> 
+  <div class='section hidden' tid='tutorial_5'></div> 
+  <div class='section hidden' tid='tutorial_text_extraction'></div> 
+  <div class='section hidden' tid='tutorial_filter_1'></div> 
+  <!-- <div class='section hidden' tid='tutorial_boolean_1'></div>  -->
+  <!-- <div class='section hidden' tid='tutorial_8'></div>  -->
+
+
+  <div class='section hidden'>
+    <!-- <center>
+      <div class='stress' style='font-size:1.2em;'>Good work! You have completed all the tutorials. Let's move on to the actual tasks. </div>
+      <br>
+      <button style='padding:5px; width:200px;' class='finish_tutorial'>Next</button>
+    </center> -->
+    <script>
+      $("button.finish_tutorial").click(function(){
+        $(".screening_container").addClass("hidden");
+        $(".tutorial_container").addClass("hidden");  
+        $(".task_container").removeClass("hidden"); 
+      });
+    </script>
+  </div>
+</div> <!-- END OF tutorial_container-->
+
+
+<div class='task_container hidden'>
+  <div class='instruction'>
+	 You will be asked to provide examples for 6 programs. Please <em>add as many steps and cases as you think is necessary</em> to explain how the program should work. Each task will begin when you click the input-output table. Thus feel free to take a break or to read instruction before clicking the input-output table. Try not to be interrupted while doing each task. 
+  </div>
+	<br>
+	<center>
+    	<button style='padding:5px; width:200px;' class='start_task'>Start</button>
+      <script>
+        $("button.start_task").click(function(){
+          $(this).hide();
+          $(".section[tid='"+task_id_list[0]+"']").removeClass('hidden');
+        });
+      </script>
+	</center>
+  
+
+</div>
+
+
+<div class='screening_container hidden'>
+    <h2>Thank you! <br>Please answer the following background questions.  </h2>
+    <div class='question'>
+      <label>1. What is your age?</label>
+        <input type='radio' name='age' value='20'>18-24<br>
+        <input type='radio' name='age' value='30'>25-34<br>
+        <input type='radio' name='age' value='40'>35-44<br>
+        <input type='radio' name='age' value='50'>45-54<br>
+        <input type='radio' name='age' value='60'>55-64<br>
+        <input type='radio' name='age' value='70'>65-74<br>
+        <input type='radio' name='age' value='80'>75-<br>
+    </div>
+    <div class='question'>
+      <label>2. What is your gender?</label>
+      <input type='radio' name='gender' value='Male'>Male<br>
+      <input type='radio' name='gender' value='Female'>Female<br>
+      <input type='radio' name='gender' value='PreferNotToAnswer'>Prefer not to answer<br>
+      <input type='radio' name='gender' value='Other'>Other: <input id='q_gender_other'><br>
+    </div>
+    <div class='question'>
+      <label>3. What is your current occupation?</label>
+      <input id='q_occupation' type='text' size=30 placeholder='Your occupation in detail'>
+    </div>
+    <div class='question'>
+      <label>4. Please indicate your programming experience.</label>
+      <input type='radio' name='prog_exp' value='4'>I have developed <b>projects for practical use</b><br>
+      <input type='radio' name='prog_exp' value='3'>I have developed <b>simple projects as part of learning</b><br>
+      <input type='radio' name='prog_exp' value='2'>I know <b>basic programming concepts</b><br>
+      <input type='radio' name='prog_exp' value='1'><b>No programming knowledge at all</b><br>
+      <input type='radio' name='prog_exp' value='-1'>Other: <input id='q_prog_exp_other' ><br>
+    </div>
+    <div class='question'>
+      <label>5. Please check the following questions about your technical experience.</label>
+      <input type='checkbox' name='computer_exp_1'>I have used <b>scientific and statistical analysis tools</b> (e.g. Matlab, R, SPSS)<br>
+      <input type='checkbox' name='computer_exp_2'>I have done <b>text processing with script languages</b> (e.g. Python, Perl, Ruby)<br>
+      <input type='checkbox' name='computer_exp_3'>I have used <b>basic features</b> of spreadsheet applications (e.g. MS Excel, Google spreadsheet)<br>
+      <input type='checkbox' name='computer_exp_4'>I have used <b>simple formulas (e.g. Sum, Average)</b> of spreadsheet applications. <br>
+      <input type='checkbox' name='computer_exp_5'>I have used <b>advanced formulas and macros</b> of spreadsheet applications.<br>
+      <input type='checkbox' name='computer_exp_6'>I have created Web sites using <b>content management systems</b> (e.g. Wordpress, Drupal, Joomla)<br>
+      <input type='checkbox' name='computer_exp_7'>I have created Web sites using <b>HTML, CSS, and Javascript.</b> <br>
+    </div>
+    <center>
+      <button style='padding:5px; width:200px;' class='finish_screening'>Submit Result</button>
+  </center>
+    <script>
+      $("button.finish_screening").click(function(){
+        $(".screening_container").addClass("hidden");
+        $(".closing_container").removeClass("hidden"); 
+        submit();
+        // CHECK MISSING ANSWERS
+        // Data.q_age = $(".screening_container").find("input#q_age").val();
+        // Data.q_gender = $(".screening_container").find("input[name='gender']:checked").val();
+        // Data.q_gender_other = $(".screening_container").find("input#q_gender_other").val();
+        // Data.q_occupation = $(".screening_container").find("input#q_occupation").val();
+        // Data.q_prog_exp = $(".screening_container").find("input[name='prog_exp']:checked").val();
+        // Data.q_prog_exp_other = $(".screening_container").find("input#q_prog_exp_other").val();
+        // if(Data.q_age=="") { alert("Please answer all questions"); }
+        // else if(Data.q_gender=="Other" && Data.q_gender_other=="") { alert("Please answer all questions"); }
+        // else if(Data.q_occupation=="") { alert("Please answer all questions"); }
+        // else if(Data.q_prog_exp=="Other" && Data.q_prog_exp_other=="") { alert("Please answer all questions"); }
+        // else {
+        //   // OPTION NEXT PAGE
+        //   $(".screening_container").addClass("hidden");
+        //   $(".closing_container").removeClass("hidden"); 
+        // }
+      });
+    </script>
+</div>
+
+
+<div class='closing_container hidden'>
+  <h3>Thank you for your participation</h3>
+	<div class='instruction'>
+   		Please copy this code <span class='taskcode'>{{ taskcode }}</span> and paste into the Amazon Mechanical Turk page.  
+   	</div>
+</div>
+
+
+
+
+
+</body>
+
+</html>

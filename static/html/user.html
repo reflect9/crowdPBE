@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="css/user.css" rel="stylesheet" type="text/css"/>
+    <!-- EXTERNAL LIBRARY -->
+    <script src="js/lib/jquery-2.0.3.min.js" type="text/javascript"></script>
+    <script src="js/lib/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/async.js" type="text/javascript"></script>
+    <!-- HANDSONTABLE -->
+    <script type="text/javascript" src="http://handsontable.com/dist/handsontable.full.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://handsontable.com/dist/handsontable.full.css">
+    <!-- MAIN JS CODE -->
+    <script src="js/MixedVespy.js" type="text/javascript"></script>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script src="js/grid.js" type="text/javascript"></script>
+    <script src="js/page.js" type="text/javascript"></script>
+    <script src="js/inferenceUI.js" type="text/javascript"></script>
+    <script src="js/pbe.js" type="text/javascript"></script>
+    <script src="js/spreadsheet.js" type="text/javascript"></script>
+    <script src="js/planner.js" type="text/javascript"></script>
+    <script src="js/editor.js" type="text/javascript"></script>
+    <script src="js/node.js" type="text/javascript"></script>
+    <script>
+
+$(document).ready(function() {
+    MixedVespy.init(MixedVespy.defaultProgram); 
+});
+
+    </script>
+</head>
+<body>
+
+
+<div id='main_container'>
+    <div id='left_pane'>
+        <div class='pane_head'>
+            <div class='head_title'>CONTENT</div>
+            <!-- <div class='head_description'>Content</div> -->
+        </div>
+        {% include 'static/html/task1.html' %}
+
+    </div>
+    <div id='mid_pane'>
+        <div id='upper_mid'>
+            <div class='pane_head'>
+                <div class='head_title'>PROGRAMMING INTENT</div>
+                <!-- <div class='head_description'>Content</div> -->
+            </div>
+            <div class='pbe_holder'>
+                <div class='instruction'>
+                    There are two ways to get an operation for the current step. First, you can demonstrate  
+                    You can set an operation of the currently-selected step <span class='current_node'></span> by demonstration or providing examples.  
+                </div>
+                <div class='inner_pane demonstration_tools'>
+                    <span class='optionTitle'> <b>Option 1.</b> Demonstrate the operation's behavior in the CONTENT panel (left). There are four tools you can choose.</span>
+                    <div class='mode_buttons'>
+                        <button class='mode unselectable' modetype='select'>Extract elements</button>
+                        <button class='mode unselectable' modetype='remove'>Remove elements</button>
+                        <button class='mode unselectable' modetype='modify'>Modify text of elements</button>
+                        <button class='mode unselectable' modetype='create'>Create and attach new elements</button>
+                    </div>
+                    <div class='mode_details'>
+                        <div class='detail hidden' modetype='select'> 
+                            Click the first few elements to extract in the Content panel.
+                        </div>
+                        <div class='detail hidden' modetype='remove'> 
+                            Click the first few elements to remove in the Content panel.
+                        </div>
+                        <div class='detail hidden' modetype='modify'> 
+                            Click and modify text of the first few elements in the Content panel. 
+                        </div>
+                        <div class='detail hidden' modetype='create'> 
+                            Create a few examples of new text elements in the Content panel. 
+                        </div>
+                    </div>
+                </div> <!-- Option 1. -->
+                <div class='inner_pane example_tools' style='margin-top:20px;'>
+                    <span class='optionTitle'> <b>Option 2.</b> Provide examples of input and output of the operation</span>
+                    <!--<br>Step 1. Specify the operation's input data with the following options. 
+                     <div class='mode_buttons'>
+                        <button class='mode unselectable' modetype='auto'>Auto select</button>
+                        <button class='mode unselectable' modetype='manual'>Manual</button>
+                        <button class='mode unselectable' modetype='mockup'>Mock-up</button>
+                    </div> -->
+                    <!-- <div class='mode_details' style='height:auto !important;'>
+                        <div class='detail hidden' modetype='auto'> 
+                            It will automatically select input nodes suitable for the output data.    
+                        </div>
+                        <div class='detail hidden' modetype='manual'> 
+                            You can manually choose single / multiple nodes for the operation to be generated.
+                        </div>
+                        <div class='detail hidden' modetype='mockup'> 
+                            You can mock up input values to generate operation. Keep in mind that you will have to update input nodes of the generated operation.  
+                            <div class='inputs' inputID=1>
+                                <span>INPUT 1</span>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                            </div>
+                            <div class='inputs' inputID=2>
+                                <span>INPUT 2</span>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                                <input type='text'></input>
+                            </div>
+                        </div>                        
+                    </div> -->
+                    <table class='input_output'>
+                        <tr>
+                            <th><input placeholder='INPUT 1'></input></th> 
+                            <td><input></td> <td><input></td> <td><input></td> <td><input></td>
+                            <td><input></td> <td><input></td>
+                        </tr>
+                        <tr>
+                            <th><input placeholder='INPUT 2'></input></th> 
+                            <td><input></td> <td><input></td> <td><input></td> <td><input></td>
+                            <td><input></td> <td><input></td>
+                        </tr>
+                        <tr class='output_row'>
+                            <th>OUTPUT</th> 
+                            <td><input></td> <td><input></td> <td><input></td> <td><input></td>
+                            <td><input></td> <td><input></td>
+                        </tr>
+                    </table>
+                    <div style='margin:0px 10px 10px 10px; font-size:16px;'>You can either create mock input values, or use values of existing steps by replacing INPUT 1 and 2 with the step's code(e.g. B)</div>
+
+                    <!-- <div class='outputs'> 
+                        <span>OUTPUT</span>
+                        <input type='text'></input>
+                        <input type='text'></input>
+                        <input type='text'></input>
+                        <input type='text'></input>
+                        <input type='text'></input>
+                        <input type='text'></input>
+                    </div> -->
+                </div> <!-- Option 2. via examples -->
+
+                <center>
+                    <button class='pull_suggestions' style='font-size:18px; margin-top:20px;'>Get suggestions</button>
+                </center>
+
+            </div>
+            <!-- <div class='spreadsheet_holder'>
+            </div> -->
+        </div>
+        <div id='lower_mid'>
+            <div class='pane_head'>
+                <div class='head_title'>SUGGESTIONS</div>
+                <!-- <div class='head_description'>Content</div> -->
+            </div>
+            <div class='instruction'>
+                Following operations are suggested for demonstrations or examples you gave. Click an operation to assign it to the current node.
+                <!--<b>Basic usage</b><br>
+                <ol>
+                    <li>Demonstrate what the program should do on the CONTENT or the SPREADSHEET panels</li>
+                    <li>Choose one among suggested operations below </li>
+                    <li>Check the SCRIPT panel </li>
+                </ol>-->
+            </div>
+            <div id='inference_ui'>
+                    <!--<center>
+                        <button class='pull_suggestions'>Get suggestions</button>    
+                    </center>-->
+                <ul class='suggested_operations'>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id='right_pane'>
+        <div class='pane_head'>
+            <div class='head_title'>SCRIPT</div>
+            <!-- <div class='head_description'>Content</div> -->
+        </div>
+        <div class='controls'>
+            <button class='run'>Execute the script below</button>
+        </div>
+        <div id='nodes_container'>
+            <!--
+            <label style="display:block; line-height:2em; font-size:19px;">Task. Find min and max of the prices</label>-->
+            <ul class='nodes'> 
+                <li class='node'>
+                    <div class='operation'>
+                        <div class='icon'>-</div>
+                        <div class='title'>Unspecified operation</div>
+                        <div class='description'>...</div>
+                    </div>
+                    <table class='values'>
+                        <tr>
+                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+            <!--<center>
+                <button class='add_new_node' style='margin:10px 0px'>Add New Node</button>
+            </center>-->
+        </div>
+
+        
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,496 @@
+body {
+  padding: 20px;
+}
+div.start {
+  margin-top: 30px;
+  width: 100%;
+  text-align: center;
+}
+button:hover {
+  cursor: pointer;
+}
+table.alltasks {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  border: 1px ;
+  width: auto;
+}
+table.alltasks td {
+  padding: 5px;
+}
+table.alltasks ul {
+  list-style-type: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+table.alltasks li {
+  list-style-type: none;
+  list-style: none;
+}
+table.alltasks th.num,
+table.alltasks td.num {
+  width: 20px;
+}
+table.alltasks td.histogram {
+  min-width: 400px;
+}
+table.alltasks td.cloud {
+  width: 400px;
+}
+table.alltasks td.topicBox {
+  width: 400px;
+}
+table.alltasks td.topicBox div {
+  height: 250px;
+  width: 400px;
+  border: 1px solid #ddd;
+  background-repeat: no-repeat;
+  background-position-y: -25px;
+  background-size: 124%;
+  background-color: red;
+  background-position-x: -67px;
+}
+ul.likert {
+  width: 100%;
+  padding: 10px 0 10px 20px;
+  margin: 0;
+}
+ul.likert li {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  float: left;
+  list-style-type: none;
+  width: 50px;
+  margin: 0 10px 0 10px;
+  text-align: center;
+}
+div.topic_representation .instruction {
+  border-bottom: 1px solid #ddd;
+}
+div.topic_representation ul.topic_list {
+  list-style-type: none;
+  list-style: none;
+  padding: 0px;
+}
+div.topic_rep {
+  width: 400px;
+  height: 250px;
+  overflow: hidden;
+  float: left;
+  border: 1px solid #aaa;
+  margin: 0px 20px 20px 0px;
+  padding: 10px 0 10px 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+div.topic_rep ul {
+  padding: 10px;
+}
+.hidden {
+  display: none;
+}
+.wordlist {
+  position: relative;
+}
+.wordlist ul {
+  list-style-type: none;
+  list-style: none;
+  padding: 10px;
+}
+.wordlist ul.doubleColumn_1 {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+.wordlist ul.doubleColumn_2 {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+}
+.wordlist ul.singleColumn {
+  position: absolute;
+  top: 5px;
+  left: 25%;
+}
+.wordlist li {
+  clear: both;
+  line-height: 24px;
+}
+.wordlist li .wordIdx {
+  float: left;
+  color: #aaa;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  width: 15px;
+  text-align: right;
+  margin-right: 4px;
+}
+.wordlist li .wordTerm {
+  float: left;
+  font-size: 15px;
+  width: 70px;
+}
+.histogram {
+  position: relative;
+}
+.histogram ul {
+  list-style-type: none;
+  list-style: none;
+  padding: 10px;
+}
+.histogram ul.doubleColumn_1 {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+.histogram ul.doubleColumn_2 {
+  position: absolute;
+  top: 5px;
+  left: 55%;
+}
+.histogram ul.singleColumn {
+  position: absolute;
+  top: 5px;
+  left: 25%;
+}
+.histogram li {
+  clear: both;
+  line-height: 24px;
+}
+.histogram li .wordIdx {
+  float: left;
+  color: #aaa;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  width: 15px;
+  text-align: right;
+  margin-right: 4px;
+}
+.histogram li .wordTerm {
+  float: left;
+  font-size: 15px;
+  width: 80px;
+}
+.histogram li .wordHisto {
+  float: left;
+  background: rgba(0, 0, 0, 0.3);
+  height: 8px;
+  margin-top: 9px;
+  margin-left: 5px;
+}
+.topicBox {
+  width: 400px;
+}
+.topicBox div {
+  height: 250px;
+  width: 400px;
+  border: 1px solid #ddd;
+  background-repeat: no-repeat;
+  background-position-y: -25px;
+  background-size: 124%;
+  background-position-x: -67px;
+}
+tr.linebreaker {
+  background: black;
+}
+div.answer {
+  width: 450px;
+  float: left;
+}
+span.shortAnswer {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: helvetica;
+}
+span.longAnswer {
+  font-size: 12px;
+  font-weight: 300;
+  font-family: serif;
+}
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+button {
+  font-size: 16px;
+  padding: 6px 12px;
+  background-color: #fff;
+  border-radius: 3px;
+  border: 1px solid #aaa;
+  color: #444;
+}
+label.questionIndex {
+  color: #666;
+  font-family: helvetica;
+  font-size: 12px;
+  font-weight: 600;
+}
+div.introduction {
+  margin: 0;
+  line-height: 1.5em;
+  padding: 10px;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+div.instruction {
+  margin: 0;
+  line-height: 1.5em;
+  padding: 10px;
+  font-size: 16px;
+}
+div.endMessage {
+  padding: 20px;
+  margin: 20px;
+  width: 500px;
+  background: #eee;
+  border: 1px soild red;
+  border-radius: 10px;
+  font-size: 18px;
+}
+div.errorMessage {
+  width: 100%;
+  text-align: center;
+  color: red;
+}
+table.reportTable ul.wordList {
+  margin: 0;
+  padding: 0;
+}
+table.reportTable ul.wordList li {
+  font-family: arial;
+  display: inline-block;
+  list-style-type: none;
+  list-style: none;
+  margin: 1px;
+  background: #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+}
+div.evaluation_container div.instruction {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #000;
+}
+div.evaluation_container ul.evaluation_list {
+  list-style-type: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.evaluation_container ul.evaluation_list li.evaluation {
+  list-style-type: none;
+  list-style: none;
+  clear: both;
+}
+div.evaluation_container ul.evaluation_list div.documents {
+  float: left;
+  width: 480px;
+  padding-right: 30px;
+}
+div.evaluation_container ul.evaluation_list div.documents ul {
+  list-style-type: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.evaluation_container ul.evaluation_list div.documents ul li {
+  list-style-type: none;
+  list-style: none;
+  cursor: zoom-in;
+  margin-bottom: 15px;
+}
+div.evaluation_container ul.evaluation_list div.documents ul li div.doc_title {
+  font-family: Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 1.1em;
+}
+div.evaluation_container ul.evaluation_list div.documents ul li div.doc_title a.show_more {
+  display: block;
+  margin-top: 3px;
+  font-family: helvetica;
+  font-weight: 500;
+  font-size: 11px;
+  color: #aaa;
+}
+div.evaluation_container ul.evaluation_list div.documents ul li div.doc_fulltext {
+  font-size: 0.9em;
+  display: none;
+}
+div.evaluation_container ul.evaluation_list .descriptions {
+  width: 500px;
+  float: left;
+}
+div.evaluation_container ul.evaluation_list .descriptions label.order {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table {
+  width: 350px;
+  border: 1px solid #aaa;
+  margin-top: 10px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table thead {
+  font-size: 11px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table .quality_column {
+  width: 50px;
+  text-align: center;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table .label_column {
+  width: 340px;
+  padding-left: 5px;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table th,
+div.evaluation_container ul.evaluation_list .descriptions table.description_table td {
+  border: 1px solid #aaa;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table td.desc_label_term {
+  padding: 10px 5px 10px 5px;
+  text-transform: lowercase;
+}
+div.evaluation_container ul.evaluation_list .descriptions table.description_table li.desc_label p.hidden {
+  display: none;
+  clear: both;
+}
+div.alldescriptions div.topicIdx {
+  margin-top: -10px;
+}
+div.alldescriptions div.topicIdx .title {
+  font-family: sans-serif, helvetica;
+  font-size: 20px;
+  font-weight: 800;
+  margin-right: 20px;
+}
+div.alldescriptions div.documents {
+  float: left;
+  width: 45%;
+}
+div.alldescriptions div.documents ul {
+  list-style-type: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.alldescriptions div.documents ul li {
+  list-style-type: none;
+  list-style: none;
+  margin-top: 15px;
+}
+div.alldescriptions div.documents ul li div.doc_title {
+  font-weight: 800;
+  font-family: sans-serif, helvetica, Arial;
+}
+div.alldescriptions div.documents ul li div.doc_fulltext {
+  font-size: 13px;
+}
+div.alldescriptions div.documents ul li div.doc_fulltext .show_more {
+  color: #92ba67;
+}
+div.alldescriptions div.documents ul li div.doc_fulltext .rest {
+  display: none;
+}
+div.alldescriptions div.descriptions {
+  float: left;
+  width: 50%;
+  margin-left: 30px;
+  margin-top: 15px;
+}
+div.alldescriptions div.descriptions label.word_setting {
+  margin-top: 10px;
+}
+div.alldescriptions div.descriptions div.topic_terms ul {
+  list-style-type: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.alldescriptions div.descriptions div.topic_terms ul li {
+  font-family: arial;
+  display: inline-block;
+  list-style-type: none;
+  list-style: none;
+  margin: 1px;
+  background: #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+}
+div.alldescriptions div.descriptions label.shortOrLong_setting {
+  display: block;
+  margin-top: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  font-color: #666;
+  font-family: helvetica;
+}
+div.alldescriptions div.descriptions table {
+  width: 100%;
+  margin-bottom: 0px;
+}
+div.alldescriptions div.descriptions table td {
+  width: 25%;
+  vertical-align: top;
+}
+div.alldescriptions div.descriptions table td li.desc_label span.eval_best {
+  color: white;
+  text-align: center;
+  display: inline-block;
+  width: 10px;
+  background-color: blue;
+}
+div.alldescriptions div.descriptions table td li.desc_label span.eval_worst {
+  color: white;
+  text-align: center;
+  display: inline-block;
+  width: 10px;
+  background-color: red;
+}
+div.alldescriptions div.descriptions div.desc_label {
+  font-size: 12px;
+  margin-left: 10px;
+  text-align: center;
+}
+div.alldescriptions div.descriptions div.desc_label span.eval_best {
+  color: white;
+  text-align: center;
+  display: inline-block;
+  width: 10px;
+  background-color: blue;
+}
+div.alldescriptions div.descriptions div.desc_label span.eval_worst {
+  color: white;
+  text-align: center;
+  display: inline-block;
+  width: 10px;
+  background-color: red;
+}
+div.alldescriptions div.descriptions ol {
+  font-size: 12px;
+  margin: 0px;
+  padding: 0px;
+}
+div.alldescriptions div.descriptions ol li {
+  margin-left: 20px;
+  padding: 0px;
+}
