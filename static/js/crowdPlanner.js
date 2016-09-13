@@ -29,6 +29,7 @@ CrowdPlanner = {
 							if(isSameProgram(generatedP[0], test.program)){
 								console.log("pass");
 							} else {
+								console.log(JSON.stringify(generatedP[0]));
 								throw opKey + " test " + testI + " failed";
 							}
 						}
@@ -1137,7 +1138,7 @@ CrowdPlanner = {
 			unitTests: [
 				{	inputs:[
 						["ab, kde, defg", "defg, ac" ], 
-						["true, false, true", "false, true" ]
+						["T,F,T","F,T"]
 					],
 					output: [ "ab, defg", "ac"],
 					program: {
@@ -1154,7 +1155,7 @@ CrowdPlanner = {
 						["abc", "de" ],
 						["ab, kde, defg", "defg, ac" ], 
 						["2,3,4", "4,2" ],
-						["true,false,true", "true,true" ],
+						["T,F,T", "T,T" ],
 					],
 					output: [ "ab, defg", "defg, ac"],
 					program: {
@@ -1213,10 +1214,10 @@ CrowdPlanner = {
 			execute:function(previousSteps, P) {	},
 			unitTests: [
 				{	inputs:[
-						["true,false,true", "true"], 
-						["false,true,true", "false" ],
+						["T,F,T", "T"], 
+						["F,T,T", "F" ],
 					],
-					output: [ "false,false,true", "false"],
+					output: [ "F,F,T", "F"],
 					program: {
 						type:"boolean_operation",
 						param: {
@@ -1230,10 +1231,10 @@ CrowdPlanner = {
 				{	inputs:[
 						[],
 						["1,2,3"],
-						["true,false,true", "true"], 
-						["false,true,true", "false" ],
+						["T,F,T", "T"], 
+						["F,T,T", "F" ],
 					],
-					output: [ "true,true,true", "true"],
+					output: [ "T,T,T", "T"],
 					program: {
 						type:"boolean_operation",
 						param: {
@@ -1283,7 +1284,7 @@ CrowdPlanner = {
 						["ab, kde, defg", "defg, ac" ], 
 						["2,3,4,5,6,7", "4,2" ],
 					],
-					output: [ "true,true,false,false,false,false", "false,true"],
+					output: [ "T,T,F,F,F,F", "F,T"],
 					program: {
 						type:"number_test",
 						param: {
@@ -1298,9 +1299,9 @@ CrowdPlanner = {
 						["abc", "de" ],
 						["ab, kde, defg", "defg, ac" ], 
 						["2,3,4,5,6,7", "4,2" ],
-						["true,false,true", "true,true" ],
+						["T,F,T", "T,T" ],
 					],
-					output: [ "false,true,false,false,true,false", "false,false"],
+					output: [ "F,T,F,F,T,F", "F,F"],
 					program: {
 						type:"number_test",
 						param: {
@@ -1315,7 +1316,7 @@ CrowdPlanner = {
 						["ab, kde, defg", "defg, ac" ], 
 						["2,3,4,5,6,7", "4,2" ]
 					],
-					output: [ "false,true,false,true,false,true", "false,false"],
+					output: [ "F,T,F,T,F,T", "F,F"],
 					program: {
 						type:"number_test",
 						param: {

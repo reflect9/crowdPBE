@@ -15,12 +15,27 @@ MESSAGE_EXAMPLES_INCONSISTENT_WITH_PROGRAM = "The computer learned a wrong progr
 //
 REQUIRED_MINUTES = 0;
 REQUIRED_TRIALS = 5;
+
+var generateAllTutorials = function() {
+	var tutorial_tid_list = _.filter(_.keys(pbeTasks), function(tid){ return tid.indexOf("tutorial") != -1;});
+	console.log("TUTORIALS");
+	console.log(tutorial_tid_list);
+	for(var i=0; i<tutorial_tid_list.length; i++) {
+		var tid = tutorial_tid_list[i];
+		var sectionEl = $("<div class='section hidden' tid='"+tid+"'></div>");
+		if(i==0) $(sectionEl).removeClass("hidden");
+		if(i==tutorial_tid_list.length-1) $(sectionEl).addClass("lastTutorial");
+		$(sectionEl).insertBefore($("div.tutorial_container div.endOfTutorial"));
+		generateSingleTask(tid, sectionEl);		
+	}
+};
 var generateAllTasks = function() {
 	var taskContainerEl = $("div.task_container");
 	// var task_id_list = _.shuffle(["task_filter","task_extract","task_sort","task_reduce","task_conditional_replace"]);
 	$("span#numTasks").text(task_id_list.length);
 	_.each(task_id_list, function(tid, index){
-		var sectionEl = $("<div class='section hidden' tid='"+tid+"'></div>").appendTo(taskContainerEl);
+		var sectionEl = $("<div class='section hidden' tid='"+tid+"'></div>")
+			.insertBefore($("div.task_container div.endOfTask"));
 		$("<h3>Task "+(index+1)+"</h3>").appendTo(sectionEl);
 		generateSingleTask(tid, sectionEl, index);
 	});
@@ -96,10 +111,16 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	// EVENTHANDER FOR OPENNEXTSECTION
 	$(taskEl).find("button.openNextSection").click(function(){
 		var currentSection = $(this).parents(".section");
-		var nextSectionTID = $(currentSection).next(".section").attr("tid");
-		openSection(nextSectionTID);
-		// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
-		$(currentSection).addClass("hidden");
+		var tid = $(currentSection).attr("tid");
+		if(tid==task_id_list[task_id_list.length-1]) {
+			// IF CURRENt TASK IS THe LAST ONE, THEN SHOW ENDOfTASK DIV
+			$("div.endOfTask").removeClass("hidden");
+		} else {
+			var nextSectionTID = $(currentSection).next(".section").attr("tid");
+			openSection(nextSectionTID);
+			// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
+			$(currentSection).addClass("hidden");
+		}
 	});
 
 	// EVENTHANDLER OF STARTING TASK
@@ -168,7 +189,9 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		Data[tid] = data;
 		// GENERATING PROGRAMS FOR INDIVIDUAL STEPS
 		programs = generatePrograms(data);
-		var isEveryStepRight = validateProgramsAndShowFeedback(programs, taskEl);
+		var validationResult = validateProgramsAndShowFeedback(programs, taskEl);
+		var isEveryStepRight = validationResult['isEveryStepRight'];
+		var numProgList = validationResult['numProgList'];
 		// LOG
 		Log.push({
 	    	event:"INFER_PROGRAM",
@@ -177,7 +200,7 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	    	detail:{
 	    		data:data,
 	    		programs:programs,
-	    		result:isEveryStepRight
+	    		numProgList:numProgList
 	    	},
 	    	time:Date.now()
 	    });
@@ -188,6 +211,16 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		if(isEveryStepRight){
 			// TESTING DATA (INPUT AND OTUPUT ONLY)
 			var testResult = pbeTasks[tid]["testOutput"](Data[tid]);
+			Log.push({
+		    	event:"TEST_PROGRAM",
+		    	summary:"TEST_PROGRAM, "+tid,
+		    	tid:tid,
+		    	detail:{
+		    		programs: programs,
+		    		testResult: testResult
+		    	},
+		    	time:Date.now()
+		    });
 			if(testResult.isValid == true) {
 				$(taskEl).find(".testResult").html("<span style='color:green;'>"+testResult.message+"</span>");
 		      	endTask(tid);
@@ -195,21 +228,17 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		      		// IF IT IS REAL TASK, SHOW THE BUTTON TO MOVE ON
 					$(taskEl).parents("div.section").find(".openNextSection").removeClass("hidden");	
 				} else {
-					// IF IT IS TUTORIAL, AUTOMATICALLY MOVE ON
-					openSection($("div.section[tid='"+tid+"']").next(".section").attr("tid"));
+					if($(taskEl).parents("div.section").hasClass("lastTutorial")) {
+						$("div.endOfTutorial").removeClass("hidden");
+					} else {
+						// IF IT IS TUTORIAL, AUTOMATICALLY MOVE ON
+						openSection($("div.section[tid='"+tid+"']").next(".section").attr("tid"));	
+					} 
+					
 				}
 			} else {
 		      $(taskEl).find(".testResult").html("<span style='color:red;'>"+testResult.message+"</span>");;
 		    }
-			Log.push({
-		    	event:"TEST_PROGRAM",
-		    	summary:"TEST_PROGRAM, "+tid,
-		    	tid:tid,
-		    	detail:{
-		    		testResult: testResult
-		    	},
-		    	time:Date.now()
-		    });
 		} else {
 			$(taskEl).find(".testResult").html("<span style='color:red;'>"+MESSAGE_AMBIGUOUS_STEPS+"</span>");
 		}//
@@ -228,6 +257,7 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	// GIVEUP
 	$(taskEl).find("button.giveup_button").click(function(){
 		giveUpTask($(event.target).parents("div.task").attr("tid"));
+		$(this).off("click");
 	});
 
 
@@ -304,7 +334,10 @@ function validateProgramsAndShowFeedback(programs, taskEl){
 	if(tid=="tutorial_1") {
 		$(taskEl).find("tr.step,tr.output td.lastColumn").text("");
 	}	
-	return isEveryStepRight;
+	return {
+		isEveryStepRight:isEveryStepRight,
+		numProgList:num_prog_list
+	};
 }
 
 function giveUpTask(tid){
@@ -321,10 +354,18 @@ function giveUpTask(tid){
 	// var testResultEl = $(".task[tid='"+tid+"']").find(".testResult");
 	// $(testrresultEl)
 	// SIMPLY GIVE UP SHOW NEXT SECTION
-	var taskEl = $("div.section[tid='"+tid+"']");
-	openSection($(taskEl).next(".section").attr("tid"));
-	// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
-	if(tid.indexOf("task")!=-1) {	$(taskEl).addClass("hidden");	}
+	var currentSection = $(".section[tid='"+tid+"']");
+	if(tid==task_id_list[task_id_list.length-1]) {
+		// IF CURRENt TASK IS THe LAST ONE, THEN SHOW ENDOfTASK DIV
+		$("div.endOfTask").removeClass("hidden");
+	} else if($(currentSection).hasClass("lastTutorial")) {
+		$("div.endOfTutorial").removeClass("hidden");
+	} else {
+		var taskEl = $("div.section[tid='"+tid+"']");
+		openSection($(taskEl).next(".section").attr("tid"));	
+		// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
+		if(tid.indexOf("task")!=-1) {	$(taskEl).addClass("hidden");	}
+	}
 }
 function endTask(tid){
 	Log.push({
@@ -340,13 +381,6 @@ function openSection(tid){
 	var sectionEl = $("div.section[tid='"+tid+"']");
 	if($(sectionEl).hasClass("hidden")) {
 		$(sectionEl).removeClass("hidden").css("opacity","0").animate({opacity: 1.0}, 1000);
-		if(tid.indexOf("tutorial")!=-1) {
-			// ANIMATE FOr TUTORIALS
-			// $("html, body").delay(500).animate({ scrollTop:"99999px"}, 300);  	
-		} else {
-			// DONT ANIMATE FOR ACTUAL TASKS
-			// $("html, body").delay(500).animate({ scrollTop:"0px"}, 300);  	
-		}
 		Log.push({
 			event:"OPEN_SECTION", 
 			summary:"OPEN_SECTION, "+$(sectionEl).attr("tid"),

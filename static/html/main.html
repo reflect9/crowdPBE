@@ -19,11 +19,9 @@
 </head>
 <body>
 
-
-
 <div class='introduction'>
 <h2>Study on Example-based Programming</h1>
-<p>Thanks for your participation. We are researchers from the University of Maryland investigating how people can create computer programs by teaching the computer about desired results through a series of gxamples. This study consists of tutorials followed by actual tasks, which will take around 25 minutes. There will be questionnaire at the end.</p>
+<p>Thanks for your participation. We are researchers from the University of Maryland investigating how people can create computer programs by teaching the computer about desired results through a series of examples. This study consists of tutorials followed by actual tasks, which will take around 25 minutes. There will be questionnaire at the end.</p>
 
 <p>After you complete the study, do not forget to copy and paste the completion code to complete the HIT.</p>
 
@@ -55,23 +53,23 @@
 
 <div class='tutorial_container hidden'>
   <div class='instruction'>
-    <p>The purpose of programming is to teach a computer how to perform a task. Traditionally, programmers do this by writing out instructions. But as an alternative approach, Programming-by-Example enables people to teach computers with <em>examples of input and output</em>, and then the computer will <em>infer programs that can similarly calculate correct output for new inputs</em>. For instance, to teach computer a program that multiplies any number by five, you can give an example (Input:1, Output:5). Then the computer can infer that multiplication by 5 is desired, since that is a way to transform 1 to 5.</p>
-    <p>In this study, we are going to ask you to teach computer a few tasks by providing examples. If you provide <em>sufficient and thoughtful examples</em>, the computer will effectively infer a <em>single program that performs the task for a wide range of inputs</em> beyond the cases that you provide. This tutorial is designed to teach you how to program by example - before you complete the real tasks afterwards.</p>
+    <p>The purpose of programming is to teach a computer how to perform a task. Traditionally, programmers do this by writing out instructions. But as an alternative approach, Programming-by-Example enables people to create programs by <em>teaching the computer about desired results through a series of examples</em>. Then the computer will <em>infer programs that can similarly calculate correct outputs for new inputs</em>. For instance, to teach computer a program that multiplies any number by five, you can give an example (Input:1, Output:5). Then the computer can infer that multiplication by 5 is desired, since that is a way to transform 1 to 5.</p>
+    <p>In this study, we are going to ask you to teach computer a few tasks by providing examples. If you provide <em>sufficient and consistent examples</em>, the computer will effectively infer a <em>single program that performs the task for a wide range of inputs</em> beyond the cases that you provide. This tutorial is designed to teach you how to program by example - before you complete the real tasks afterwards.</p>
   </div>
   
   <hr>
 
-	<div class='section' tid='tutorial_1'></div> 
+	<!-- <div class='section' tid='tutorial_1'></div> 
   <div class='section hidden' tid='tutorial_2'></div>
   <div class='section hidden' tid='tutorial_3'></div>
   <div class='section hidden' tid='tutorial_4'></div> 
   <div class='section hidden' tid='tutorial_5'></div> 
   <div class='section hidden' tid='tutorial_text_extraction'></div> 
-  <div class='section hidden' tid='tutorial_filter_1'></div> 
+  <div class='section hidden' tid='tutorial_filter_1'></div>  -->
   <!-- <div class='section hidden' tid='tutorial_boolean_1'></div>  -->
   <!-- <div class='section hidden' tid='tutorial_8'></div>  -->
 
-  <div class='section hidden'>
+  <div class='section endOfTutorial hidden'>
     <center>
       <div class='stress' style='font-size:1.2em;'>Good work! You have completed all the tutorials. Let's move on to the actual tasks. </div>
       <br>
@@ -90,7 +88,7 @@
 
 <div class='task_container hidden'>
   <div class='instruction'>
-	 You will be asked to <em>teach the computer 6 programs</em>. Make sure that the computer (1) learn exactly one program for each step, and (2) the entire program correspond to the task. Each task will begin when you click the input-output table. Feel free to take a break or to read instruction before clicking the input-output table. But, try not to be interrupted after you begin the task. 
+	 You will be asked to <em>teach the computer <span id='numTasks'>n</span> programs</em>. Each task will begin when you click the input-output table. Feel free to take a break or to read instruction before clicking the input-output table. But, try not to be interrupted after you begin the task. 
   </div>
 	<br>
 	<center>
@@ -102,8 +100,22 @@
         });
       </script>
 	</center>
-  
 
+
+  <div class='section endOfTask hidden'>
+    <center>
+      <div class='stress' style='font-size:1.2em;'>Good work! You have completed all the tasks. Let's move on to the closing questionnaire. </div>
+      <br>
+      <button style='padding:5px; width:200px;' class='finish_task'>Next</button>
+    </center>
+    <script>
+      $("button.finish_task").click(function(){
+        $(".tutorial_container").addClass("hidden");  
+        $(".task_container").addClass("hidden"); 
+        $(".screening_container").removeClass("hidden");
+      });
+    </script>
+  </div>
 </div>
 
 
@@ -135,7 +147,6 @@
       <input type='radio' name='education' value='3'>High school<br>
       <input type='radio' name='education' value='2'>Nursery school to 8th grade<br>
       <input type='radio' name='education' value='1'>No schooling completed<br>
-      <input type='radio' name='education' value='Other'>Other: <input id='q_education_other'><br>
       <br>
       <label>4. What was your major in higher education?</label>
       <input id='q_major' type='text' size=30 placeholder='Briefly indicate your major'>

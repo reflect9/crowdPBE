@@ -25,8 +25,8 @@ pbeTasks = {
 			}
 		}
 	},
-	'tutorial_2': {
-		'taskID':'tutorial_2',
+	'tutorial_arith_1': {
+		'taskID':'tutorial_arith_1',
 		'instruction': `Nice work! However, the computer inferred many programs (e.g. <code>Input*2, Input+1</code>) that can both calculate 2 for 1. You need tell the computer which program is correct by giving additional cases. <em>Click [Add Case] button, and provide another input and a corresponding output number.</em>`,
 		'description':"Input + 1",
 		'example':{
@@ -50,8 +50,8 @@ pbeTasks = {
 			}
 		}
 	},
-	'tutorial_3': {
-		'taskID':'tutorial_3',
+	'tutorial_arith_2': {
+		'taskID':'tutorial_arith_2',
 		'instruction': `Keep in mind that every step must have exactly one program only.<br><br>Let&#39;s learn about <em>steps</em>. The computer may not be smart enough to learn programs for complex tasks in a single step, so we ask you to break the calculation down into simple steps for the computer. For instance, the computer cannot learn multi-step calculations such as <code>(Input+1)*2</code>, no matter how many examples of input and output you give. Instead, you should <em>break the task into subtasks, and insert additonal steps</em> containing the results of each subtask. In the example below, you need to click <img width='27px' src='css/image/addStep.png'> to add a step, and type results of the subtask (<code>Input+1</code>).`,
 		'description':"(Input + 1) * 2",
 		'partialDescription':["Input + 1"],
@@ -77,8 +77,8 @@ pbeTasks = {
 		}
 	},
 	
-	'tutorial_5': {
-		'taskID':'tutorial_5',
+	'tutorial_sum': {
+		'taskID':'tutorial_sum',
 		'instruction': `In the previous tasks, each case contains single values. However, some tasks should deal with lists of items (separated by ","). Teach the computer to get sum of all numbers in Input.`,
 		'description':"Get the sum of all numbers.",
 		'example':{
@@ -251,33 +251,6 @@ pbeTasks = {
 			}
 		}
 	},
-
-	'task_three_step_arith': {
-		'taskID':'task_three_step_arith',
-		'instruction': `To teach <code>(Input+1)*(Input-1)</code>, you need to add multiple steps. Note that the ordering of steps does not matter within a case since the computer automatically figures out the dependency between steps, but a consistent ordering is required across cases.`,
-		'description':"(Input + 1) * (Input - 1)",
-		'example':{
-			'input':["1"],
-			'output':["0"],
-		},
-		'features':{
-			"addStep":true,
-			"addCase":true,
-		},
-		'testOutput':function(data){
-			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
-			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
-			var trueOutputValues = _.map(inputValues, function(v){ 
-				return _.map(v, function(vv){ return (vv+1)*(vv-1); });
-			});
-			if(isSameArray(trueOutputValues, outputValues)){
-				return { isValid:true, message:MESSAGE_PASS };
-			} else {
-				return { isValid:false, message:MESSAGE_EXAMPLES_INCONSISTENT_WITH_PROGRAM};
-			}
-		}
-	},
-
 	'task_number_sort': {
 		'taskID':'task_number_sort',
 		'instruction': `In the following task, you teach the computer to sort a list of numbers in ascending order. Note that the default example (1,-1&rarr;-1,1) is <em>not sufficient</em>, because the computer will find many other programs ((e.g. <code>Input * -1</code>, <code>Reverse Input</code>) that all calculate the same result.`, 
@@ -439,12 +412,12 @@ pbeTasks = {
 	// TOO EASY 
 	'task_extract_and_filter': {
 		'taskID':'task_extract_and_filter',
-		'instruction': `Input represents second-hand cars that follow <span class='value'>MODEL(YEAR)-PRICE</span> format. For instance, <span class='value'>Civic(2014)-$12000</span> represents a Civic manufactured in 2014, whose price is $12000.`,
+		'instruction': `The input represents cars that follow the <span class='value'>MODEL(YEAR)-PRICE</span> format. For instance, <span class='value'>Civic(2014)-$12000</span> represents a Civic manufactured in 2014, and its price is $12000.`,
 		'description':"Extract prices of cars that are manufactured within three years from 2016.",
 		'partialDescription':["Extract year", "Extract last two digits"],
 		'requiredSteps':1,
 		'example':{
-			'input':["Civic(2014)-$12000, Elantra(2012)-$9500, Corolla(2015)-$14000"],
+			'input':["Civic(2014)-$12000, Elantra(2012)-$9500, Corolla(2015)-$14000, Corolla(2013)-$10000"],
 			'output':["12000, 14000"],
 		},
 		'features':{
