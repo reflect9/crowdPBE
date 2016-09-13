@@ -7,7 +7,7 @@ MESSAGE_STEP_FAIL = "Failed to infer any program that calculates this step from 
 MESSAGE_STEP_WARNING = "Found [minimum_num_prog] programs that calculate this step from the above steps.";
 MESSAGE_STEP_SUCCESS = "Found a single program that calcuates the step.";
 // FEEDBACK FOR ALL STEPS
-MESSAGE_AMBIGUOUS_STEPS = "Make sure every step found exactly one program.";
+MESSAGE_AMBIGUOUS_STEPS = "An inconsistent set of programs was returned for the different examples provided.";
 MESSAGE_EXCEPTION = "Unexpected error. Make sure values have no typo.";
 // TESTING PROGRAM
 MESSAGE_PASS = "Good job! The computer learned the correct program.";
@@ -54,6 +54,7 @@ var generateSingleTask = function(tid, sectionElement, index) {
 							<button class='testProgram'>Teach Computer</button>\
 							<div class='testResult'></div>\
 						</div>\
+						<button class='openNextSection hidden'>Next Task</button>\
 					</div>\
 					<div class='giveup hidden'>\
 						It seems that you are having trouble with this task.\
@@ -92,6 +93,14 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	// PLACES TO SHOW INFERENCE FEEDBACK FOR FOR THE OUTpUT
 	$(taskEl).find("tr.output").append("<td class='lastColumn' rowspan=0></td>");	
 
+	// EVENTHANDER FOR OPENNEXTSECTION
+	$(taskEl).find("button.openNextSection").click(function(){
+		var currentSection = $(this).parents(".section");
+		var nextSectionTID = $(currentSection).next(".section").attr("tid");
+		openSection(nextSectionTID);
+		// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
+		$(currentSection).addClass("hidden");
+	});
 
 	// EVENTHANDLER OF STARTING TASK
 	$(taskEl).on("click.dd", "", function() {
@@ -101,27 +110,25 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	});
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
-	if(tid.indexOf("tutorial")!=-1) {
-		// ADD BUTTON FOR 
-		if(tData['features']['addStep']) $(taskEl).find("tr.input th").append("<div class='addStep'>+</div>");
-		// EVENTHANDLER FOR ADDING STEP
-		$(taskEl).on("click",".addStep", function(event){
-			var buttonEl = event.target;
-			var prevTr = $(buttonEl).parents("tr");
-			var tableEl = $(buttonEl).parents("table.inAndOut");
-			var currentNumCases = $(tableEl).find("tr.output td:not(.lastColumn)").length;
-			var stepEl = $("<tr class='step'><th><div class='removeStep'>&#9988;</div>Step<div class='addStep'>+</div></th></tr>");
-			for(var i=0;i<currentNumCases; i++) {
-				$(stepEl).append("<td contenteditable='True'></td>");
-			}
-			$(stepEl).append("<td class='lastColumn'></td>");
-			$(prevTr).after(stepEl);
-		});
-		// EVENTHANDLER FOR REMOVING STEP
-		$(taskEl).on("click",".removeStep", function(event){
-			$(event.target).parents("tr.step").remove();
-		});
-	} 
+	// ADD BUTTON FOR 
+	if(tData['features']['addStep']) $(taskEl).find("tr.input th").append("<div class='addStep'>+</div>");
+	// EVENTHANDLER FOR ADDING STEP
+	$(taskEl).on("click",".addStep", function(event){
+		var buttonEl = event.target;
+		var prevTr = $(buttonEl).parents("tr");
+		var tableEl = $(buttonEl).parents("table.inAndOut");
+		var currentNumCases = $(tableEl).find("tr.output td:not(.lastColumn)").length;
+		var stepEl = $("<tr class='step'><th><div class='removeStep'>&#9988;</div>Step<div class='addStep'>+</div></th></tr>");
+		for(var i=0;i<currentNumCases; i++) {
+			$(stepEl).append("<td contenteditable='True'></td>");
+		}
+		$(stepEl).append("<td class='lastColumn'></td>");
+		$(prevTr).after(stepEl);
+	});
+	// EVENTHANDLER FOR REMOVING STEP
+	$(taskEl).on("click",".removeStep", function(event){
+		$(event.target).parents("tr.step").remove();
+	});
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// EVENTHANDLER FOR ADDING CASE
@@ -184,7 +191,13 @@ var generateSingleTask = function(tid, sectionElement, index) {
 			if(testResult.isValid == true) {
 				$(taskEl).find(".testResult").html("<span style='color:green;'>"+testResult.message+"</span>");
 		      	endTask(tid);
-		      	openSection($("div.section[tid='"+tid+"']").next(".section").attr("tid"));
+		      	if(tid.indexOf("task")!=-1) {	
+		      		// IF IT IS REAL TASK, SHOW THE BUTTON TO MOVE ON
+					$(taskEl).parents("div.section").find(".openNextSection").removeClass("hidden");	
+				} else {
+					// IF IT IS TUTORIAL, AUTOMATICALLY MOVE ON
+					openSection($("div.section[tid='"+tid+"']").next(".section").attr("tid"));
+				}
 			} else {
 		      $(taskEl).find(".testResult").html("<span style='color:red;'>"+testResult.message+"</span>");;
 		    }
@@ -241,6 +254,7 @@ function generatePrograms(data) {
 };
 function validateProgramsAndShowFeedback(programs, taskEl){
 	var num_prog_list = [];
+	var tid = $(taskEl).attr("tid");
 	for(var iStep in programs) {
 		var programs_for_a_step = programs[iStep];
 		// EVALUATING PROGRAMS: 1. GROUP PROGRAMS BY THEIR INPUTS
@@ -286,6 +300,10 @@ function validateProgramsAndShowFeedback(programs, taskEl){
 			isEveryStepRight = false;
 		}
 	}
+	// NOT SHOWING FEEBACK FOR TUTORIAL_1
+	if(tid=="tutorial_1") {
+		$(taskEl).find("tr.step,tr.output td.lastColumn").text("");
+	}	
 	return isEveryStepRight;
 }
 
@@ -303,7 +321,10 @@ function giveUpTask(tid){
 	// var testResultEl = $(".task[tid='"+tid+"']").find(".testResult");
 	// $(testrresultEl)
 	// SIMPLY GIVE UP SHOW NEXT SECTION
-	openSection($("div.section[tid='"+tid+"']").next(".section").attr("tid"));
+	var taskEl = $("div.section[tid='"+tid+"']");
+	openSection($(taskEl).next(".section").attr("tid"));
+	// IF IT IS ACTUAL TASKS, HIDE CURRENT TASKEL
+	if(tid.indexOf("task")!=-1) {	$(taskEl).addClass("hidden");	}
 }
 function endTask(tid){
 	Log.push({
@@ -319,7 +340,13 @@ function openSection(tid){
 	var sectionEl = $("div.section[tid='"+tid+"']");
 	if($(sectionEl).hasClass("hidden")) {
 		$(sectionEl).removeClass("hidden").css("opacity","0").animate({opacity: 1.0}, 1000);
-		$("html, body").delay(500).animate({ scrollTop:"99999px"}, 300);  
+		if(tid.indexOf("tutorial")!=-1) {
+			// ANIMATE FOr TUTORIALS
+			// $("html, body").delay(500).animate({ scrollTop:"99999px"}, 300);  	
+		} else {
+			// DONT ANIMATE FOR ACTUAL TASKS
+			// $("html, body").delay(500).animate({ scrollTop:"0px"}, 300);  	
+		}
 		Log.push({
 			event:"OPEN_SECTION", 
 			summary:"OPEN_SECTION, "+$(sectionEl).attr("tid"),

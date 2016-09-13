@@ -1080,8 +1080,9 @@ CrowdPlanner = {
 				var Ps = [];
 				var oValues = _.map(O, function(v){return str2array(v); });
 				if(Is.length<2) return [];
-				for(var idxI=0; idxI<Is.length-1; idxI++) {
-					for(var idxPred=idxI+1; idxPred<Is.length; idxPred++) {
+				for(var idxI=0; idxI<Is.length; idxI++) {
+					for(var idxPred=0; idxPred<Is.length; idxPred++) {
+						if(idxI==idxPred) continue;
 						var I = Is[idxI];
 						var Pred = Is[idxPred];
 						var I_values = _.map(I, function(iv){ return str2array(iv); });
@@ -1388,12 +1389,14 @@ CrowdPlanner = {
 		var max_val = _.max(_.flatten([inList,outList]));
 		var min_val = _.min(_.flatten([inList,outList]));
 		var cand_operands = _.range(min_val*2, max_val*2);
+		var cand_operands_for_remainder = _.range(2,11);
 		var cand_operators = ["<",">","==","%","!%"];
 		//
 		for(var iCond in cand_operators) {
 			var operator = cand_operators[iCond];
-			for(var iOperand in cand_operands) {
-				var operand = cand_operands[iOperand];
+			var operands = (operator=="!%" || operator=="%")? cand_operands_for_remainder: cand_operands;
+			for(var iOperand in operands) {
+				var operand = operands[iOperand];
 				if(_.every(flatOutputValues, function(out, i) {
 					return CrowdPlanner.helper_conditional(flatInputValues[i], operand, operator) == out;
 				})) {

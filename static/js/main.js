@@ -13,7 +13,7 @@ function skipToTutorial() {
 function skipToTask() {
 	$(".introduction").addClass("hidden");
 	$(".task_container").removeClass("hidden");
-	// $(".task_container").find("div.section").removeClass("hidden");
+	$(".task_container").find("div.section").removeClass("hidden");
 }
 function skipToScreening() {
 	$(".introduction").addClass("hidden");

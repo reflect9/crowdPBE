@@ -1092,10 +1092,10 @@ function str2array(str, convertToType) {
 		});
 	} else if(convertToType == "boolean") {
 		return _.map(str.split(","), function(s){ 
-			if(s.trim().toLowerCase()=="true" || s.trim().toLowerCase()=="false") {
-				return (s.trim().toLowerCase()==="true"); 	
+			if(s.trim().toLowerCase()=="t" || s.trim().toLowerCase()=="f") {
+				return (s.trim().toLowerCase()==="t"); 	
 			} else {
-				throw "Some examples are empty or containing values other than 'true' or 'false'.";
+				throw "Some examples are empty or containing values other than boolean values ('T' or 'F').";
 			}
 		});
 	} else {
