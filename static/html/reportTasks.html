@@ -24,15 +24,15 @@
 
 <div class='participants_container'>
   <ul class='participants_list'>
-    {% for part in allData %}
+    {% for pData in allData %}
     <li class='participant'>
-        Email: {{part.email}}<br>
-        Age: {{part.q_age}}<br>
-        Gender: {{part.q_gender}}{{part.q_gender_other}}<br>
-        Occupation: {{part.q_occupation}}<br>
-        Prog.Exp.: {{part.q_prog_exp}}<br>
+        Age: {{pData.demography.q_age}},&nbsp;
+        Gender: {{pData.demography.q_gender}}{{pData.demography.q_gender_other}},&nbsp;
+        Education: {{pData.demography.q_education}},&nbsp;
+        Occupation: {{pData.demography.q_occupation}},&nbsp;
+        Prog.Exp.: {{pData.demography.q_prog_exp}},&nbsp;
         Comp.Exp.: 
-        {% for ce in part.q_computer_exp %}
+        {% for ce in pData.demography.q_computer_exp %}
           {% if ce %}T{% else %}F{% endif %}
         {% endfor %}
         <br>
@@ -43,44 +43,62 @@
 </div>
 
 
-{% for task in allTasks %}
+{% for task in tasks_parts %}
 <div class='report_container'>
-  <span class='taskDesc' tid='{{task[0].tid}}'></span> {{task[0].tid}} <br>
+  <span class='taskDesc' tid='{{tid_list[loop.index0]}}'></span> {{tid_list[loop.index0]}} <br>
   {% set taskLoop = loop %}
   <!-- TASK DATA -->
   {% for part in task %}
   <div class='trials'>
     {% for trial in part.trials %}
+
+    {% if trial.event == "INFER_PROGRAM" %}
+    <!-- CASE: INFER_PROGRAM -->
     <div class='task' style='display:inline-block;'>
       <table class='inOut'>
         <tr class='input'>
           <th>IN</th>
-          {% for case in trial.input %}
+          {% for case in trial.data.input %}
             <td>{{case}}</td>
           {% endfor %}
         </tr>
-        {% for step in trial.steps %}
+        {% for step in trial.data.steps %}
         <tr class='step' style='border-top:1px solid black;'>
           <th>
-            {% if trial.steps_desc %}
-              {{trial.steps_desc[loop.index0]}}
-            {% else %}
-              STEP
-            {% endif %}
+            STEP
           </th>
           {% for case in step %}
             <td>{{case}}</td>
           {% endfor %}
+          <!-- ADDINg Number of Programs Generated For Each Step  -->
+          <td class='lastColumn' title='{{ trial.jsonPrograms[loop.index0] }}'>{{ trial.numProgList[loop.index0] }}</td>
         </tr>
         {% endfor %}
         <tr class='output' style='border-top:1px solid black;'>
           <th>OUT</th>
-          {% for case in trial.output %}
+          {% for case in trial.data.output %}
             <td>{{case}}</td>
           {% endfor %}
+          <!-- ADDINg Number of Programs Generated For the final step : Output  -->
+          <td class='lastColumn' title='{{ trial.jsonPrograms[-1] }}'>{{ trial.numProgList[-1] }}</td>
+        </tr>
+        <tr class='otherData'>
+          <td colspan=100>
+            {{ trial.duration }} sec
+          </td>
         </tr>
       </table>
+    </div> <!-- END OF CASE: INFER_PROGRAM -->
+    {% endif %}
+
+    <!-- CASE: GIVE_UP_PROGRAM -->
+    {% if trial.event == "GIVE_UP_TASK" %}
+    <div class='task' style='display:inline-block;'>
+      GIVE UP
     </div>
+    {% endif %}
+
+
     {% endfor %} <!-- TRAIL LOOP -->
   </div> <!-- TRIALS -->
   {% endfor %}

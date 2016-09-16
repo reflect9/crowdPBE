@@ -42,6 +42,29 @@ code{
     color:@purple;
 }
 
+table.simple {
+    border-collapse: collapse;
+    table-layout:fixed;
+    width:auto;
+    border:none;
+    margin:10px;
+    font-size:0.9em;
+    td:first-child{
+        border:none;
+        text-align:right;
+        padding-right:10px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    th, td {
+        border:1px solid #bbb;
+        min-width:15px;
+        max-width:200px;
+        padding-left:10px;
+        padding-right:10px;
+        word-break: break-all;
+    }
+}
+
 div.instruction{
     line-height:1.5em;
     
@@ -94,7 +117,7 @@ div.report_container {
         font-size:1.3em;
     }
     div.trials:nth-child(even) {
-        background:#eee;
+        background:#ddd;
     }
     div.trials{
         div.task{
@@ -110,6 +133,10 @@ div.report_container {
                     max-width:300px;
                     word-break: break-all;
                 }
+                td.lastColumn {
+                    border:none;
+                    color:@orange;
+                }
                 tr.input{
 
                 }
@@ -118,6 +145,14 @@ div.report_container {
                 }
                 tr.output{
 
+                }
+                tr.otherData{
+                    text-align:center;
+                    color:#999;
+                    font-size:0.8em;
+                    td{
+                        border:none;
+                    }
                 }
              }
         }
@@ -280,8 +315,16 @@ div.tutorial_container, div.task_container {
                             border:none;
                             text-align:left;
                             font-family: Arial, Helvetica, sans-serif;
-                            max-width:500px;
+                            max-width:1000px;
+                            max-height:500px;
+                            overflow-y:scroll;
                             font-size:0.8em;
+                            ul{
+                                list-style-type:none; margin:0; padding:0;
+                                li{ list-style-type:none; margin:0; padding-left:25px;
+                                    text-indent:-9px;
+                                }
+                            }
                         }
                         > td[status='fail'] {
                             color:red;
@@ -429,12 +472,21 @@ div.tutorial_container, div.task_container {
                 margin:10px;
 
             }
-            div.testResult {
-                display:inline;
-                font-style:italic;
-                // margin-top:10px;
-                // margin-left:30px;   
+            div.inference {
+                padding:10px 5px 5px 5px;
+                button.teachButton{
+                    float:left;
+                    display:block;
+                    margin:0;
+                }    
+                div.testResult {
+                    margin-left:165px;
+                    display:block;
+                    font-style:italic;
+                }
             }
+            
+            
         }
         div.giveup{
             padding: 0px 20px 20px 30px;

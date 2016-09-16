@@ -3,6 +3,7 @@
 <head>
     <title>Study on Example-based Programming</title>
     <link href="css/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
     <!-- LIBRARIES -->
     <script src="js/lib/jquery-2.0.3.min.js" type="text/javascript"></script>
     <script src="js/lib/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
@@ -23,13 +24,15 @@
 <h2>Study on Example-based Programming</h1>
 <p>Thanks for your participation. We are researchers from the University of Maryland investigating how people can create computer programs by teaching the computer about desired results through a series of examples. This study consists of tutorials followed by actual tasks, which will take around 25 minutes. There will be questionnaire at the end.</p>
 
-<p>After you complete the study, do not forget to copy and paste the completion code to complete the HIT.</p>
+<p>Please set your browser window wide enough to see this page. After you complete the study, do not forget to copy and paste the completion code to complete the HIT. </p>
 
-<p>Please read this <a target='_blank' href='css/irb.pdf'>consent form</a>. If you have any questions about this study, contact Tak Yeon Lee (http://tylee-portfolio.herokuapp.com/).</p>
+<p>Read this <a target='_blank' href='css/irb.pdf'>consent form</a>. If you have any questions about this study, contact Tak Yeon Lee (http://tylee-portfolio.herokuapp.com/).</p>
 
+{% if debug == "yes" %}
 <button onClick='skipToTutorial();'>skip to tutorial</button>
 <button onClick='skipToTask();'>skip to tasks</button>
 <button onClick='skipToScreening();'>skip to questionnaire</button>
+{% endif %}
 
 <p>To participate, please press "Yes, I agree" button below.
 </p>
@@ -53,21 +56,11 @@
 
 <div class='tutorial_container hidden'>
   <div class='instruction'>
-    <p>The purpose of programming is to teach a computer how to perform a task. Traditionally, programmers do this by writing out instructions. But as an alternative approach, Programming-by-Example enables people to create programs by <em>teaching the computer about desired results through a series of examples</em>. Then the computer will <em>infer programs that can similarly calculate correct outputs for new inputs</em>. For instance, to teach computer a program that multiplies any number by five, you can give an example (Input:1, Output:5). Then the computer can infer that multiplication by 5 is desired, since that is a way to transform 1 to 5.</p>
-    <p>In this study, we are going to ask you to teach computer a few tasks by providing examples. If you provide <em>sufficient and consistent examples</em>, the computer will effectively infer a <em>single program that performs the task for a wide range of inputs</em> beyond the cases that you provide. This tutorial is designed to teach you how to program by example - before you complete the real tasks afterwards.</p>
+    <p>The purpose of programming is to teach a computer how to perform a task. Traditionally, programmers do this by writing out instructions. But as an alternative approach, Programming-by-Example enables people to create programs by <em>teaching a computer about desired results through a series of examples</em>. Then the computer will <em>infer programs that can similarly calculate outputs for new inputs</em>. For instance, to teach a computer a program that multiplies any number by five, you can give an example (Input:1, Output:5). Then the computer can infer that multiplication by 5 is desired, since that is a way to transform 1 to 5.</p>
+    <p>In this study, we are going to ask you to teach your computer a few tasks by providing examples. If you provide <em>sufficient and consistent examples</em>, the computer will effectively infer a <em>single program that performs the task for a wide range of inputs</em> beyond the cases that you provide. This tutorial is designed to teach you how to program by example - before you complete the real tasks afterwards.</p>
   </div>
   
   <hr>
-
-	<!-- <div class='section' tid='tutorial_1'></div> 
-  <div class='section hidden' tid='tutorial_2'></div>
-  <div class='section hidden' tid='tutorial_3'></div>
-  <div class='section hidden' tid='tutorial_4'></div> 
-  <div class='section hidden' tid='tutorial_5'></div> 
-  <div class='section hidden' tid='tutorial_text_extraction'></div> 
-  <div class='section hidden' tid='tutorial_filter_1'></div>  -->
-  <!-- <div class='section hidden' tid='tutorial_boolean_1'></div>  -->
-  <!-- <div class='section hidden' tid='tutorial_8'></div>  -->
 
   <div class='section endOfTutorial hidden'>
     <center>
@@ -88,7 +81,7 @@
 
 <div class='task_container hidden'>
   <div class='instruction'>
-	 You will be asked to <em>teach the computer <span id='numTasks'>n</span> programs</em>. Each task will begin when you click the input-output table. Feel free to take a break or to read instruction before clicking the input-output table. But, try not to be interrupted after you begin the task. 
+	 You will be asked to <em>teach the computer to perform <span id='numTasks'>n</span> tasks</em>. Each task will begin when you click the input-output table. Feel free to take a break or to read instruction before clicking the input-output table. But, try not to be interrupted after you begin the task. 
   </div>
 	<br>
 	<center>

@@ -68,6 +68,9 @@ function submit() {
 	// LOG DATA
 	data['log'] = Log;
 	console.log(data);
+	submit_worker(data);
+}
+function submit_worker(data) {
 	$.post("submit",{data:JSON.stringify(data)}, function(result){
 		console.log("submitted");
 	});

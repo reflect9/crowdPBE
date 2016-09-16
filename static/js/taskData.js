@@ -14,13 +14,15 @@ pbeTasks = {
 			"addCase":false,
 		},
 		'testOutput':function(data){
-			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
-			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
-			
-
-			if(inputValues[0]==1 && outputValues[0]==2){
-				return { isValid:true, message:MESSAGE_PASS };
-			} else {
+			try {
+				var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
+				var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });	
+				if(inputValues[0]==1 && outputValues[0]==2){
+					return { isValid:true, message:MESSAGE_PASS };
+				} else {
+					return { isValid:false, message:"Type 1 in Input, and 2 in Output."};
+				}
+			} catch(e) {
 				return { isValid:false, message:"Type 1 in Input, and 2 in Output."};
 			}
 		}
@@ -37,6 +39,10 @@ pbeTasks = {
 			"addStep":false,
 			"addCase":true,
 		},
+		'solution':[
+			["Input", 1, 2],
+			["Output", 2, 3]
+		],
 		'testOutput':function(data){
 			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
 			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
@@ -52,7 +58,7 @@ pbeTasks = {
 	},
 	'tutorial_arith_2': {
 		'taskID':'tutorial_arith_2',
-		'instruction': `Keep in mind that every step must have exactly one program only.<br><br>Let&#39;s learn about <em>steps</em>. The computer may not be smart enough to learn programs for complex tasks in a single step, so we ask you to break the calculation down into simple steps for the computer. For instance, the computer cannot learn multi-step calculations such as <code>(Input+1)*2</code>, no matter how many examples of input and output you give. Instead, you should <em>break the task into subtasks, and insert additonal steps</em> containing the results of each subtask. In the example below, you need to click <img width='27px' src='css/image/addStep.png'> to add a step, and type results of the subtask (<code>Input+1</code>).`,
+		'instruction': `Keep in mind that every step must have exactly one program only.<br><br>Let&#39;s learn about <em>steps</em>. The computer may not be smart enough to learn programs for complex tasks in a single step, so we ask you to break the calculation down into simple steps for the computer. For instance, the computer cannot learn multi-step calculations such as <code>(Input+1)*2</code>, no matter how many cases of input and output you give. Instead, you should <em>break the task into subtasks, and insert additonal steps</em> containing the results of each subtask. In the example below, you need to click <img width='27px' src='css/image/addStep.png'> to insert a step, and type results of the subtask (<code>Input+1</code>).`,
 		'description':"(Input + 1) * 2",
 		'partialDescription':["Input + 1"],
 		'example':{
@@ -63,6 +69,11 @@ pbeTasks = {
 			"addStep":true,
 			"addCase":true,
 		},
+		'solution':[
+			["Input", 1, 2],
+			["Step: Input + 1", 2, 3],
+			["Output", 4, 6]
+		],
 		'testOutput':function(data){
 			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
 			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
@@ -89,6 +100,10 @@ pbeTasks = {
 			"addStep":true,
 			"addCase":true,
 		},
+		'solution':[
+			["Input", "1,1", "5,3"],
+			["Output", "2", "8"]
+		],
 		'testOutput':function(data){
 			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
 			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
@@ -115,6 +130,10 @@ pbeTasks = {
 			"addStep":true,
 			"addCase":true,
 		},
+		'solution':[
+			["Input", "yes", "feeling tired"],
+			["Output", "3", "13"]
+		],
 		'testOutput':function(data){
 			var inputValues = _.map(data['input'], function(v){ return str2array(v); });
 			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
@@ -131,16 +150,21 @@ pbeTasks = {
 	
 	'tutorial_filter_1': {
 		'taskID':'tutorial_filter_1',
-		'instruction': `You can teach the computer how to <em>filter items in list</em>. To do so, you need an additional step with a list that is the same size as the original list, with Booleans (<code>T</code> or <code>F</code>) at each position in the list corresponding to whether the item at that position should be kept. The <code>T</code> value means that the filered list will <em>include</em> the corresponding item. The <code>F</code> means the corresponding item will be excluded. For instance, <code>F, T</code> will filter out the first item. Teach the following task by providing an additional step and more cases.`,
+		'instruction': `You can teach the computer how to <em>filter items in list</em>. To do so, you need an additional step with a description of which item should be kept by providing a list of True and False indicators (<code>T</code> or <code>F</code>). The <code>T</code> value means that the filered list will <em>include</em> the corresponding item. The <code>F</code> means the corresponding item will be excluded. For instance, <code>F, T</code> will filter out the first item. Teach the following task by providing an additional step and more cases.`,
 		'description':"Find numbers that are greater than 9",
 		'example':{
-			'input':["10,9,11"],
-			'output':["10,11"],
+			'input':["11,8,9,10"],
+			'output':["11,10"],
 		},
 		'features':{
 			"addStep":true,
 			"addCase":true,
 		},
+		'solution':[
+			["Input", "11,8,9,10"],
+			["Step: 'T' for values greater than 9, 'F' for the rest", "T,F,F,T"],
+			["Output", "11,10"]
+		],
 		'testOutput':function(data){
 			var inputValues = _.map(data['input'], function(v){ return str2array(v,"number"); });
 			var outputValues = _.map(data['output'], function(v){ return str2array(v,"number"); });
@@ -340,7 +364,7 @@ pbeTasks = {
 		'taskID':'task_filter_numbers',
 		'active': true,
 		'instruction': `Teach the computer to perform the following task.`,
-		'description':"Find numbers that are not divisible by 4",
+		'description':"Find numbers that are not divisible by 4 without remainder",
 		'example':{
 			'input':["1,4,5"],
 			'output':["1,5"],
@@ -413,7 +437,7 @@ pbeTasks = {
 	'task_extract_and_filter': {
 		'taskID':'task_extract_and_filter',
 		'instruction': `The input represents cars that follow the <span class='value'>MODEL(YEAR)-PRICE</span> format. For instance, <span class='value'>Civic(2014)-$12000</span> represents a Civic manufactured in 2014, and its price is $12000.`,
-		'description':"Extract prices of cars that are manufactured within three years from 2016.",
+		'description':"Extract prices of cars that are manufactured in 2014 or later.",
 		'partialDescription':["Extract year", "Extract last two digits"],
 		'requiredSteps':1,
 		'example':{

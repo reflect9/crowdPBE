@@ -3,15 +3,21 @@ task_id_list = _.filter(_.keys(pbeTasks), function(k){return k.indexOf("task")!=
 MESSAGE_INSUFFICIENT_EXAMPLES = "Insufficient examples. You can provide more cases or elaborate current examples. ";
 MESSAGE_INSUFFICIENT_STEPS = "Failed to find a program matching with the examples. It might need more steps?";
 // FEEDBACK FOR INDIVIDUAL STEPS
-MESSAGE_STEP_FAIL = "Failed to infer any program that calculates this step from above steps. Make sure the values have no typo, and consider inserting more steps.";
-MESSAGE_STEP_WARNING = "Found [minimum_num_prog] programs that calculate this step from the above steps.";
-MESSAGE_STEP_SUCCESS = "Found a single program that calcuates the step.";
+MESSAGE_STEP_FAIL = `<i class='fa fa-ban' aria-hidden='true'></i>
+						Found no program that calculates this step for one of the above steps.`;
+MESSAGE_STEP_WARNING = `<i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+						Found [minimum_num_prog] programs that calculate this step.`;
+MESSAGE_STEP_SUCCESS = `<i class='fa fa-check-circle' aria-hidden='true'></i>
+						Found a single program that calcuates the step.`;
 // FEEDBACK FOR ALL STEPS
-MESSAGE_AMBIGUOUS_STEPS = "An inconsistent set of programs was returned for the different examples provided.";
+MESSAGE_AMBIGUOUS_STEPS = "An inconsistent set of programs was returned for the different examples provided. Try to fix every step to have single programs.";
 MESSAGE_EXCEPTION = "Unexpected error. Make sure values have no typo.";
 // TESTING PROGRAM
 MESSAGE_PASS = "Good job! The computer learned the correct program.";
 MESSAGE_EXAMPLES_INCONSISTENT_WITH_PROGRAM = "The computer learned a wrong program.";
+//
+MODE_EXPERIMENTAL = "experimental";
+
 //
 REQUIRED_MINUTES = 0;
 REQUIRED_TRIALS = 5;
@@ -66,8 +72,9 @@ var generateSingleTask = function(tid, sectionElement, index) {
 					<div class='test'>\
 						<div class='header'>RESULT</div>\
 						<div class='inference'>\
-							<button class='testProgram'>Teach Computer</button>\
+							<button class='teachButton'>Teach Computer</button>\
 							<div class='testResult'></div>\
+							<div style='clear:both;'></div>\
 						</div>\
 						<button class='openNextSection hidden'>Next Task</button>\
 					</div>\
@@ -122,6 +129,13 @@ var generateSingleTask = function(tid, sectionElement, index) {
 			$(currentSection).addClass("hidden");
 		}
 	});
+	// EVENTHANDLER FOR ShoWING SOLUTION
+	$(taskEl).on("click","button.butShowSolution",function(event) {
+		$(event.target).parents("div.testResult").find("table.simple").removeClass("hidden");
+		$(event.target).parents("div.testResult").find("span.failResult").text("Here is one possible solution.");
+		$(event.target).addClass("hidden");
+	})
+
 
 	// EVENTHANDLER OF STARTING TASK
 	$(taskEl).on("click.dd", "", function() {
@@ -131,9 +145,8 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	});
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
-	// ADD BUTTON FOR 
+	// STEP ADD / REMOVE
 	if(tData['features']['addStep']) $(taskEl).find("tr.input th").append("<div class='addStep'>+</div>");
-	// EVENTHANDLER FOR ADDING STEP
 	$(taskEl).on("click",".addStep", function(event){
 		var buttonEl = event.target;
 		var prevTr = $(buttonEl).parents("tr");
@@ -146,13 +159,12 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		$(stepEl).append("<td class='lastColumn'></td>");
 		$(prevTr).after(stepEl);
 	});
-	// EVENTHANDLER FOR REMOVING STEP
 	$(taskEl).on("click",".removeStep", function(event){
 		$(event.target).parents("tr.step").remove();
 	});
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
-	// EVENTHANDLER FOR ADDING CASE
+	// CASE ADD/REMOVE
 	$(taskEl).on("click",".addCase", function(event){
 		var buttonEl = event.target;
 		var tableEl = $(buttonEl).parents("table.inAndOut");
@@ -161,7 +173,6 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		$(tableEl).find("tr.output > td.lastColumn").before("<td contenteditable='True'></td>");
 		$("<td><div class='removeCase hidden'>&#10005;</div></td>").insertBefore($(tableEl).find("tr.lastRow td:last"));
 	});
-	// EVENTHANDLER FOR REMOVING CASE
 	$(taskEl).on("click",".removeCase", function(event){
 		var currentNumCases = $(event.target).parents("tr").find("td:not(.lastColumn)").length;
 		if(currentNumCases>1) {
@@ -169,7 +180,7 @@ var generateSingleTask = function(tid, sectionElement, index) {
 			$(event.target).parents("table.inAndOut").find("tr").find("td:nth("+id+")").remove();	
 		}	
 	});
-	// EVENTHANDLER FOR SHOWING / HIDING REMOVE CASE BUTTON
+	///// MOUSE HOVERING
 	$(taskEl).on('mouseenter',"td:not(.lastColumn)",function(event){
 		var id = $(event.target).parents("tr").find("td:not(.lastColumn)").index(event.target);
 		$(event.target).parents("table.inAndOut").find("tr.lastRow td div.removeCase").addClass("hidden");
@@ -178,10 +189,11 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	$(taskEl).on('mouseleave',"td:not(.lastColumn)",function(event){
 		var id = $(event.target).parents("tr").find("td:not(.lastColumn)").index(event.target);
 		$(event.target).parents("table.inAndOut").find("tr.lastRow td div.removeCase").addClass("hidden");
-		// $(event.target).parents("table.inAndOut").find("tr.lastRow td").get(id).removeClass("hidden");
 	});
-	// INFER PROGRAM BUTTON
-	$(taskEl).find("button.testProgram").click(function(event, ui){
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	// TEACH COMPUTER BUTTON
+	$(taskEl).find("button.teachButton").click(function(event, ui){
 		var taskEl = $(event.target).parents("div.task");
 		var tid = $(taskEl).attr("tid");
 		// PREPARING DATA
@@ -189,13 +201,12 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		Data[tid] = data;
 		// GENERATING PROGRAMS FOR INDIVIDUAL STEPS
 		programs = generatePrograms(data);
-		var validationResult = validateProgramsAndShowFeedback(programs, taskEl);
+		var validationResult = validateProgramsAndShowFeedback(programs, data, taskEl);
 		var isEveryStepRight = validationResult['isEveryStepRight'];
 		var numProgList = validationResult['numProgList'];
 		// LOG
 		Log.push({
 	    	event:"INFER_PROGRAM",
-	    	summary:"INFER_PROGRAM, "+$(taskEl).attr('tid'),
 	    	tid:$(taskEl).attr('tid'),
 	    	detail:{
 	    		data:data,
@@ -209,21 +220,33 @@ var generateSingleTask = function(tid, sectionElement, index) {
 		if(tid=="tutorial_1")  { var isEveryStepRight=true; }
 		// SHOW TEST PROGRAM PANEL IF EVERYSTEP IS RIGHT
 		if(isEveryStepRight){
-			// TESTING DATA (INPUT AND OTUPUT ONLY)
-			var testResult = pbeTasks[tid]["testOutput"](Data[tid]);
+			// TESTING PROGRAM (INPUT AND OTUPUT ONLY)
+			try{
+				var programTestResult = pbeTasks[tid]["testOutput"](Data[tid]);	
+			} catch(e) {
+				var programTestResult = {
+					isValid:false,
+					message: e
+				}	
+			}
 			Log.push({
 		    	event:"TEST_PROGRAM",
-		    	summary:"TEST_PROGRAM, "+tid,
 		    	tid:tid,
 		    	detail:{
 		    		programs: programs,
-		    		testResult: testResult
+		    		testResult: programTestResult
 		    	},
 		    	time:Date.now()
 		    });
-			if(testResult.isValid == true) {
-				$(taskEl).find(".testResult").html("<span style='color:green;'>"+testResult.message+"</span>");
-		      	endTask(tid);
+			if(programTestResult.isValid == true) {
+				$(taskEl).find(".testResult").html("<span style='color:green;'>"+programTestResult.message+"</span>");
+		      	Log.push({
+					event:"TASK_PASSED", 
+					tid: tid,
+					detail: {
+					},
+					timestamp:Date.now()
+				});	
 		      	if(tid.indexOf("task")!=-1) {	
 		      		// IF IT IS REAL TASK, SHOW THE BUTTON TO MOVE ON
 					$(taskEl).parents("div.section").find(".openNextSection").removeClass("hidden");	
@@ -236,10 +259,12 @@ var generateSingleTask = function(tid, sectionElement, index) {
 					} 
 					
 				}
-			} else {
-		      $(taskEl).find(".testResult").html("<span style='color:red;'>"+testResult.message+"</span>");;
+			} else {  // WHEN ALL STEPS SUCCEED, BUT PROGRAM FAILED
+				// PROVIDE MORE DETAILED FEEDBACK
+
+		      $(taskEl).find(".testResult").html("<span style='color:red;'>"+programTestResult.message+"</span>");;
 		    }
-		} else {
+		} else {  // WHEN SOME STEPS FAILED
 			$(taskEl).find(".testResult").html("<span style='color:red;'>"+MESSAGE_AMBIGUOUS_STEPS+"</span>");
 		}//
 		// IF PARTICIPANTS SPENT TOO MUCH TIME AND INFERENCE TRIALS, LET HIM GIVE UP 
@@ -247,7 +272,11 @@ var generateSingleTask = function(tid, sectionElement, index) {
 	    	// UNSUCCESSFUL TRIAL
 	    	var minutesSpent = (Date.now()- Timer[tid]['start_stamp'])/60000;
 	    	if(Timer[tid]['trials']>REQUIRED_TRIALS && minutesSpent>REQUIRED_MINUTES) {
-	    		$(taskEl).find(".giveup").removeClass("hidden");
+	    		if(tid.indexOf("tutorial")!=-1) { // FOR TUTORIALS, SHOW HINTS
+	    			showSolution(tid, programs, taskEl);
+	    		} else { // FOR TASK, ALLOW GIVE UP
+	    			$(taskEl).find(".giveup").removeClass("hidden");
+	    		}
 	    	}
 	    	Timer[tid]['trials'] += 1;
 	    } else {
@@ -282,7 +311,7 @@ function generatePrograms(data) {
 	}
 	return programs_for_steps;
 };
-function validateProgramsAndShowFeedback(programs, taskEl){
+function validateProgramsAndShowFeedback(programs, data, taskEl){
 	var num_prog_list = [];
 	var tid = $(taskEl).attr("tid");
 	for(var iStep in programs) {
@@ -296,7 +325,7 @@ function validateProgramsAndShowFeedback(programs, taskEl){
 			}
 			programs_by_inputs[single_program.param.inputIndex].push(single_program);
 		}
-		// 2. FIND PROGRAMS FROM THE INPUT WITH SMALLEST AMBIGUITY
+		// 2. FIND MINIMUM # PROGRAMS FROM A INPUT THAT CAN REACH THE CURRENT ROW
 		var minimum_number_of_programs_from_one_input; 
 		if(_.keys(programs_by_inputs).length>0) {
 			minimum_number_of_programs_from_one_input = _.min(_.map(programs_by_inputs, function(ps, inp){
@@ -309,21 +338,33 @@ function validateProgramsAndShowFeedback(programs, taskEl){
 	}
 	// 
 	var isEveryStepRight = true;
-	for(var i in num_prog_list){
+	for(var i=0; i<num_prog_list.length; i++){
 		var minimum_num_prog = num_prog_list[i];
+		////// GIVING FEEDBACK FOR EACH STEP 
 		var tr = (i<num_prog_list.length-1)? $(taskEl).find("tr.step").get(i): $(taskEl).find("tr.output").get(0);
 		var lastColumn = $(tr).find("td.lastColumn");
-		$(lastColumn).attr("numPrograms",minimum_num_prog);
 		if(minimum_num_prog==0) {  // NO PROGRAM IS GENERATED FOR THE STEP
+			if(mode == MODE_EXPERIMENTAL) {
+				// EXPERIMENTAL. PROVIDE RICH, ACTIONABLE FEEDBACKS
+				$(lastColumn).html(generateFailMessage(data, i, tr));
+			} else {   // BASELINE. PROVIDE # PROGRAMS ONLY
+				$(lastColumn).html(MESSAGE_STEP_FAIL);
+			}
 			$(lastColumn).attr("status","fail");
-			$(lastColumn).text(MESSAGE_STEP_FAIL);
 			isEveryStepRight = false;
 		} else if(minimum_num_prog==1) { // BEST CASE.  CREATED ONE PRGRAM
 			$(lastColumn).attr("status","success");
-			$(lastColumn).text(MESSAGE_STEP_SUCCESS);
+			$(lastColumn).html(MESSAGE_STEP_SUCCESS);
 		} else if(minimum_num_prog>1) { // INSUFFICIENT EXAMPLE. CREATED MULTIPLE PROGRAMS.
+			if(mode == MODE_EXPERIMENTAL) {
+				// PROVIDE ACTIONABL FEEDBACK SUCH AS POTENTIAL INPUTS
+				// "Consider adding a new case or values in the existing cases."
+				$(lastColumn).html(MESSAGE_STEP_WARNING.replace("[minimum_num_prog]",minimum_num_prog)
+					+ " Provide more examples.");
+			} else {
+				$(lastColumn).html(MESSAGE_STEP_WARNING.replace("[minimum_num_prog]",minimum_num_prog));
+			}
 			$(lastColumn).attr("status","warning");
-			$(lastColumn).text(MESSAGE_STEP_WARNING.replace("[minimum_num_prog]",minimum_num_prog));
 			isEveryStepRight = false;
 		} else {  
 			console.error("SOMETHING WRONG?");
@@ -340,10 +381,76 @@ function validateProgramsAndShowFeedback(programs, taskEl){
 	};
 }
 
+function generateFailMessage(data, i, tr) {
+	// Returns actionable feedback for i-th row that failed to find any program
+	var failMessages = [];
+	var numSteps = data['steps'].length;
+	var dataFlatArr = [data['input']].concat(data['steps']).concat([data['output']]);
+	var prevStepData = dataFlatArr.slice(0,i+1);
+	var curStepData = (i<numSteps) ? data['steps'][i] : data['output'];
+	var curValues = _.map(curStepData, function(v){return str2array(v); });
+	// CASE: EMPTY CELL --> IS IT INTENTIONAL?
+	if(_.some(curStepData, function(v){ return v.length==0; })){
+		failMessages.push("There is an empty case. Did you miss filling it?");
+	}
+	// CASE: PARSEFLOAT EXCEPTION --> HIGHLIGHT THE CELL IN YELLOW
+	var typeConsistency = evaluateTypeConsistencyOfStep(curStepData);
+	if(typeConsistency.concistency==false) {
+		var strTypes = typeConsistency.types.join(", ");
+		failMessages.push("There are "+strTypes+" examples in this case. This might have failed the computer finding a program.");
+	} 
+	// CASE: CURRENT STEP IS A FILTERED LIST OF ANY STEPS ABOVE -->   
+	// 		 CONFIRM & TELL THEM TO GIVE T, F  	
+	for (var prevStep of prevStepData){
+		var prevValues = _.map(prevStep, function(v){return str2array(v); });
+		if (isFiltered2D(prevValues, curValues)) {
+			failMessages.push("If you are trying to filter values from steps above, you need an additional step containing T or F.");
+			break;			
+		} else {  }
+	}
+	// CASE: CURRENT STEP IS A SUBSTRING OF FILTERED VERSION LIST -->
+	// 		 CONFIRM & TELL THEM TO DO TWO TASKS AT THE SAME TIME
+	for (var prevStep of prevStepData){
+		var prevValues = _.map(prevStep, function(v){return str2array(v); });
+		if (isFilteredAndExtracted(prevValues, curValues)) {
+			failMessages.push("Are you trying to filter and extract part of string at the same time? If that's the case, you have to do them in two steps.");
+			break;			
+		} else {  }
+	}
+	// CASE: CURRENT STEP IS ALL T and F, 
+	// 		but previous rows do not have numbers --> 
+	// 		T and F can only be calculated from numbers only
+	if(_.every(_.flatten(curValues), function(v){ 
+		return v.toLowerCase()=="t" || v.toLowerCase()=="f";
+	})) {
+		var isThereAnyNumberCaseWithSameShape = false;
+		for(var prevStep of prevStepData) {
+			try{	var prevValues = _.map(prevStep, function(v){return str2array(v, "number"); });	
+			} catch(e){   continue;  }
+			if(!isSameShape(curValues, prevValues)) continue;
+			else { // THERE IS A PREVIOUS STEP THAT HAS THE SAME SHAPE AS THE CURRENT STEP
+				// AND CAN BE CONVERETED TO NUMBERS
+				isThereAnyNumberCaseWithSameShape = true;
+				break;
+			}
+		}
+		if(!isThereAnyNumberCaseWithSameShape){
+			failMessages.push("T, F can be calculated from numbers only. Insert a step above, and find suitable numbers that can be calculated to this step.");
+		}
+	}
+	if(failMessages.length==0) failMessages.push("No program is found for this step. Consider adding a step above.");
+	var htmlFailMessages = "<ul class='feedback_list'>";
+	for(var ifm in failMessages) {
+		htmlFailMessages += "<li><i class='fa fa-exclamation-triangle' aria-hidden='true'></i> "+failMessages[ifm]+"</li>";
+	} 
+	htmlFailMessages += "</ul>";
+	return htmlFailMessages;
+}
+
+
 function giveUpTask(tid){
 	Log.push({
 		event:"GIVE_UP_TASK", 
-		summary:"GIVE_UP_TASK, "+tid,
 		tid: tid,
 		detail: {
 		},
@@ -367,23 +474,31 @@ function giveUpTask(tid){
 		if(tid.indexOf("task")!=-1) {	$(taskEl).addClass("hidden");	}
 	}
 }
-function endTask(tid){
-	Log.push({
-		event:"END_TASK", 
-		summary:"END_TASK, "+tid,
-		tid: tid,
-		detail: {
-		},
-		timestamp:Date.now()
-	});	
+
+/*
+	For TUTORIALS, when #trials and time exceed minimum, show hints. 
+*/
+function showSolution(tid, programs, taskEl) {
+	var solution = pbeTasks[tid].solution;
+	var table = $("<table class='simple hidden'></table>");
+	for(var row of solution) {
+		var tr = $("<tr></tr>");
+		for(var v of row) {
+			$(tr).append("<td>"+v+"</td>");
+		}
+		$(table).append(tr);
+	}
+	$(taskEl).find("div.testResult").empty()
+	.append("<span class='failResult' style='color:red;'>It seems that you are having trouble. <button class='butShowSolution'>Show solution</button></span>")
+	.append(table);
 }
+
 function openSection(tid){
 	var sectionEl = $("div.section[tid='"+tid+"']");
 	if($(sectionEl).hasClass("hidden")) {
 		$(sectionEl).removeClass("hidden").css("opacity","0").animate({opacity: 1.0}, 1000);
 		Log.push({
 			event:"OPEN_SECTION", 
-			summary:"OPEN_SECTION, "+$(sectionEl).attr("tid"),
 			tid: $(sectionEl).attr("tid"),
 			detail: {
 			},
@@ -411,7 +526,6 @@ function startTask(tid){
 	};
 	Log.push({
 		event:"START_TASK", 
-		summary:"START_TASK:" + tid,
 		tid: tid,
 		detail: {  },
 		timestamp:Date.now()

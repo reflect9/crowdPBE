@@ -816,10 +816,38 @@ function jsonClone(obj) {
 	return JSON.parse(JSON.stringify(obj));
 }
 
+function isFiltered2D(originalArr, filteredArr) {
+	return _.every(_.range(originalArr.length), function(i){ 
+		return isFiltered(originalArr[i], filteredArr[i])==true;
+	});
+}
+
 function isFiltered(original,filtered) {
 	var IV = _.clone(original);
 	for(var i in filtered) {
 		var idx = IV.indexOf(filtered[i]);
+		if(idx==-1) return false;
+		else IV.splice(0,idx);
+	}
+	return true;
+}
+
+
+function isFilteredAndExtracted2D(originalArr, filteredArr) {
+	return _.every(_.range(originalArr.length), function(i){ 
+		return isFilteredAndExtracted(originalArr[i], filteredArr[i])==true;
+	});
+}
+function isFilteredAndExtracted(original,filtered) {
+	var IV = _.clone(original);
+	for(var i in filtered) {
+		var idx = -1;
+		for(var j in IV) {
+			if(IV[j].indexOf(filtered[i])!=-1) {
+				idx = j;
+				break;
+			}
+		}
 		if(idx==-1) return false;
 		else IV.splice(0,idx);
 	}
@@ -1087,8 +1115,12 @@ function str2array(str, convertToType) {
 	if(str.match(/^\s+$/)) return []; // IF GIVEN STRING IS EMPTY, RETURN EMPTY LIST
 	if (convertToType == "number") {
 		return _.map(str.split(","), function(s){ 
-			if (_.isNaN(parseFloat(s.trim()))) throw "Make sure that no cell is empty or containing non-number values.";
-			else return parseFloat(s.trim()); 
+			var regexFloatNumber = new RegExp("^[+-]?[0-9]+[.]?[0-9]*$");
+			if(regexFloatNumber.test(s.trim())==false) {
+				throw new Error("Make sure that no cell is empty or containing non-number values.");
+			} else {
+				return parseFloat(s.trim()); 
+			}
 		});
 	} else if(convertToType == "boolean") {
 		return _.map(str.split(","), function(s){ 
@@ -1139,6 +1171,35 @@ function reload(id) {
     var $el =  $('#' + id);
     $('#' + id).replaceWith('<script id="' + id + '" src="' + $el.prop('src') + '"><\/script>');
 }
+
+function evaluateTypeConsistencyOfStep(step) {
+	var flattenValues = _.flatten(_.map(step, function(s){ 
+		return str2array(s); }));
+	var evalResult = evaluateTypeConsistencyOfArray(flattenValues);
+	return evalResult;
+}
+
+
+function evaluateTypeConsistencyOfArray(arr) {
+	var types = _.map(arr, function(str){ return getDataType(str); });
+	if(_.uniq(types).length == 1) {
+		return { consistency: true,  type: _.uniq(types)[0]};		
+	} else {
+		return { consistency: false, types: _.uniq(types)};
+	}
+}
+
+function getDataType(str) {
+	var regexFloatNumber = new RegExp("^[+-]?[0-9]+[.]?[0-9]*$");
+	var regexBoolean = new RegExp("^[tf]$");
+	if(regexFloatNumber.test(str.trim())) return "Number";
+	else if(regexBoolean.test(str.trim().toLowerCase())) return "Boolean";
+	else {
+		return "String";	
+	}
+}
+
+
 
 // MixedVespy.num2code = function(i) {
 // 	return MixedVespy.num2code_worker(i+1);

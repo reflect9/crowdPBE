@@ -16,6 +16,9 @@ handlers:
 - url: /css
   static_dir: static/css
 
+- url: /font-awesome-4.6.3
+  static_dir: static/font-awesome-4.6.3
+
 - url: .*
   script: main.app
 

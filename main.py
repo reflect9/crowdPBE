@@ -32,26 +32,46 @@ class Result2(ndb.Model):
 """
 REQUEST HANDLERS
 """
-def extractLogDataForTask(taskID, LogData):
+def generateReportOneTrial(taskID, LogData):
     # FROM LOG DATA, GET LIST OF TRIALS, TOTAL TIME.
-    result = []
-    for event in LogData:
-        if 'tid' not in event['detail']:
-            continue
-        # print "--------"
-        # print taskID, event['detail']['tid']
-        if event['detail']['tid']==taskID:
-            # print "event"
-            # pprint.pprint(event)
-            if event["event"]=="TEST_EXAMPLE":
-                result.append(event['detail']['data'])
-    return result
+    trials = []
+    #### SET UP THE FIRST TIMESTAMP
+    lastTimeStamp = -1
+    for log in LogData:
+        if log['event']=="START_TASK" and log["tid"]==taskID:
+            lastTimeStamp = log["timestamp"]
+    ####
+    for log in LogData:
+        if log['event']=="INFER_PROGRAM" and log["tid"]==taskID:
+            jsonPrograms = [pprint.pformat(v) for i,v in enumerate(log["detail"]["programs"])]
+            if lastTimeStamp!= -1:
+                duration = (log["time"]- lastTimeStamp) / 1000.0
+            else:
+                duration = 0
+            lastTimeStamp = log["time"]
+            oneTrial = {
+                "event": log["event"],
+                "data": log["detail"]["data"],
+                "numProgList": log["detail"]["numProgList"],
+                "jsonPrograms": jsonPrograms,
+                "duration": duration
+            }
+            trials.append(oneTrial)
+    ####
+    for log in LogData:
+        if log['event']=="GIVE_UP_TASK" and log["tid"]==taskID:
+            trials.append({
+                "event": log["event"]
+            });
+    return trials
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         mode = self.request.get("mode", default_value="hard")
+        debug = self.request.get("debug", default_value="no")
         template_values = { 
             'mode':mode,
+            'debug':debug,
             'taskcode': id_generator(),
 
         }
@@ -65,43 +85,8 @@ class SubmitHandler(webapp2.RequestHandler):
         res = Result2()
         res.data = data
         res.put()
-
-class ReportHandler(webapp2.RequestHandler):
-    def get(self):
-        mode = self.request.get("mode", default_value="json")
-        if mode=="json":
-            res = Result.query()
-            dataList = [r.data for r in res]
-            self.response.out.write(dataList)
-        elif mode=="tasks":
-            allResults = Result.query()
-            allData = [json.loads(result.data) for result in allResults]
-            tasks = [[{} for j in range(len(allData))] for i in range(17)]
-            for pi in range(len(allData)):
-                for ti in range(17):
-                    tasks[ti][pi]["finalResult"] = allData[pi]['tasks'][ti]
-                    try:
-                        taskCode = allData[pi]['tasks'][ti]["tid"]
-                        tasks[ti][pi]["trials"] = extractLogDataForTask(taskCode, allData[pi]['log'])
-                        ## TASKS DO NOT HAVE ANY TRIAL. USE FINALRESULT INSTEAD
-                        if len(tasks[ti][pi]["trials"])==0:
-                            tasks[ti][pi]["trials"].append(tasks[ti][pi]["finalResult"])
-                    except Exception as e:
-                        # print "TID doesn't exist"
-                        # print allData[pi]['tasks'][ti]
-                        tasks[ti][pi]["trials"] = []
-                    # print "participant:",pi, "task ", ti
-                # pprint.pprint(tasks[ti])
-            # pprint.pprint(tasks)
-            template_values = {
-                'allTasks':tasks,
-                'allData':allData
-            }
-            template = JINJA_ENVIRONMENT.get_template('static/html/reportTasks.html')
-            html = template.render(template_values)
-            self.response.out.write(html)
     
-class ReportHandler2(webapp2.RequestHandler):
+class ReportHandler(webapp2.RequestHandler):
     def get(self):
         mode = self.request.get("mode", default_value="json")
         if mode=="json":
@@ -109,27 +94,28 @@ class ReportHandler2(webapp2.RequestHandler):
             dataList = [r.data for r in res]
             self.response.out.write(dataList)
         elif mode=="tasks":
-            allResults = Result2.query()
-            allData = [json.loads(result.data) for result in allResults]
-            tasks = [[{} for j in range(len(allData))] for i in range(17)]
-            for pi in range(len(allData)):
-                for ti in range(17):
-                    tasks[ti][pi]["finalResult"] = allData[pi]['tasks'][ti]
-                    try:
-                        taskCode = allData[pi]['tasks'][ti]["tid"]
-                        tasks[ti][pi]["trials"] = extractLogDataForTask(taskCode, allData[pi]['log'])
-                        ## TASKS DO NOT HAVE ANY TRIAL. USE FINALRESULT INSTEAD
-                        if len(tasks[ti][pi]["trials"])==0:
-                            tasks[ti][pi]["trials"].append(tasks[ti][pi]["finalResult"])
-                    except Exception as e:
-                        # print "TID doesn't exist"
-                        # print allData[pi]['tasks'][ti]
-                        tasks[ti][pi]["trials"] = []
+            result_all = Result2.query()
+            allData = [json.loads(result.data) for result in result_all]
+            tid_list = ["tutorial_1", "tutorial_arith_1", "tutorial_arith_2", "tutorial_sum", "tutorial_text_extraction", "tutorial_filter_1", "task_three_step_arith", "task_number_sort", "task_filter_words_by_length", "task_filter_numbers", "task_extract_and_filter"]
+            tasks_parts = []  # {} for j in range(len(allData))
+            for ti in range(len(tid_list)):
+                oneTask = []
+                for pi in range(len(allData)):
+                    taskCode = tid_list[ti]
+                    # print taskCode
+                    trials = generateReportOneTrial(taskCode, allData[pi]['log'])
+                    onePart = {
+                        "trials": trials,
+                        "otherData": None
+                    }
+                    oneTask.append(onePart)
                     # print "participant:",pi, "task ", ti
-                # pprint.pprint(tasks[ti])
+                # pprint.pprint(oneTask)
+                tasks_parts.append(oneTask)
             # pprint.pprint(tasks)
             template_values = {
-                'allTasks':tasks,
+                'tasks_parts':tasks_parts,
+                'tid_list': tid_list,
                 'allData':allData
             }
             template = JINJA_ENVIRONMENT.get_template('static/html/reportTasks.html')
@@ -139,7 +125,6 @@ class ReportHandler2(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/submit', SubmitHandler),
-    ('/report', ReportHandler),
-    ('/report2', ReportHandler2),
+    ('/report', ReportHandler)
 
 ], debug=True)
