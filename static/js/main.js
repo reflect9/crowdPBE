@@ -65,6 +65,7 @@ function submit() {
 	// 	data['tasks'].push(taskData);
 	// });
 	data['programs'] = Programs;
+	data['mode'] = mode;
 	// LOG DATA
 	data['log'] = Log;
 	console.log(data);

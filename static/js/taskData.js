@@ -29,7 +29,7 @@ pbeTasks = {
 	},
 	'tutorial_arith_1': {
 		'taskID':'tutorial_arith_1',
-		'instruction': `Nice work! However, the computer inferred many programs (e.g. <code>Input*2, Input+1</code>) that can both calculate 2 for 1. You need tell the computer which program is correct by giving additional cases. <em>Click [Add Case] button, and provide another input and a corresponding output number.</em>`,
+		'instruction': `Nice work! However, other programs such as <code>Input*2</code> also calculate 2 for 1. You need to clarify which program is correct by giving additional cases. <em>Click [Add Case] button, and provide another input and a corresponding output number.</em>`,
 		'description':"Input + 1",
 		'example':{
 			'input':["1"],
@@ -58,7 +58,7 @@ pbeTasks = {
 	},
 	'tutorial_arith_2': {
 		'taskID':'tutorial_arith_2',
-		'instruction': `Keep in mind that every step must have exactly one program only.<br><br>Let&#39;s learn about <em>steps</em>. The computer may not be smart enough to learn programs for complex tasks in a single step, so we ask you to break the calculation down into simple steps for the computer. For instance, the computer cannot learn multi-step calculations such as <code>(Input+1)*2</code>, no matter how many cases of input and output you give. Instead, you should <em>break the task into subtasks, and insert additonal steps</em> containing the results of each subtask. In the example below, you need to click <img width='27px' src='css/image/addStep.png'> to insert a step, and type results of the subtask (<code>Input+1</code>).`,
+		'instruction': `Keep in mind that every step must have one program only.<br><br>Let&#39;s learn about <em>steps</em>. The computer may not be smart enough to learn programs for complex tasks in a single step, so we ask you to break the calculation down into simple steps for the computer. For instance, the computer cannot learn multi-step calculations such as <code>(Input+1)*2</code>, no matter how many cases of input and output you give. Instead, you should <em>break the task into subtasks, and insert additonal steps</em> containing the results of each subtask. In the example below, you need to click <img width='27px' src='css/image/addStep.png'> to insert a step, and type results of the subtask (<code>Input+1</code>).`,
 		'description':"(Input + 1) * 2",
 		'partialDescription':["Input + 1"],
 		'example':{
@@ -120,11 +120,11 @@ pbeTasks = {
 	
 	'tutorial_text_extraction': {
 		'taskID':'tutorial_text_extraction',
-		'instruction': `Many tasks handle text data. Teach the computer to get the length of Input text (including spaces).`,
+		'instruction': `You can teach programs that handle single-line text.`,
 		'description':"Get length of a text value (including spaces).",
 		'example':{
 			'input':["yes"],
-			'output':["3"],
+			'output':[""],
 		},
 		'features':{
 			"addStep":true,
