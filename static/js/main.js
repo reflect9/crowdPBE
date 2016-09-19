@@ -35,6 +35,12 @@ function setCaseNum(tr, caseNum) {
 	return tr;
 }
 
+function sendLog(data) {
+	$.get("log",{data:data}, function(result){
+		//
+	});
+}
+
 function submit() {
 	var data = {};
 	// DEMOGRAPHIC QUESTIONS
@@ -75,6 +81,11 @@ function submit_worker(data) {
 	$.post("submit",{data:JSON.stringify(data)}, function(result){
 		console.log("submitted");
 	});
+}
+
+window.onerror = function reportUncaughtErrors(errorMsg, url, lineNumber) {
+    sendLog(errorMsg);
+    return false;
 }
 
 $(document).ready(function() {

@@ -410,7 +410,7 @@ function analyzeFailure(data, i, tr) {
 	if(typeConsistency.concistency==false) {
 		var strTypes = typeConsistency.types.join(", ");
 		failMessages.push("There are "+strTypes+" examples in this case. This might have failed the computer finding a program.");
-		failCode.push("INCONSISTENT_TYPE_["+typeConsistency.types.join("_");+"]");
+		failCode.push("INCONSISTENT_TYPE_["+typeConsistency.types.join("_")+"]");
 	} 
 	// CASE: CURRENT STEP IS A FILTERED LIST OF ANY STEPS ABOVE -->   
 	// 		 CONFIRM & TELL THEM TO GIVE T, F  	
@@ -479,7 +479,7 @@ function giveUpTask(tid){
 		},
 		timestamp:Date.now()
 	});	
-	Timer[tid]["end_stamp"]=Date.now();
+	// Timer[tid]["end_stamp"]=Date.now();
 	// // SHOW SOLUTION
 	// var testResultEl = $(".task[tid='"+tid+"']").find(".testResult");
 	// $(testrresultEl)
@@ -533,6 +533,7 @@ function openSection(tid){
 			},
 			timestamp:Date.now()
 		});
+		sendLog("OPEN_SECTION "+tid);
 	}	
 }
 function extractDataFromTaskEl(taskEl){

@@ -34,7 +34,8 @@
         Comp.Exp.: 
         {% for ce in pData.demography.q_computer_exp %}
           {% if ce %}T{% else %}F{% endif %}
-        {% endfor %}
+        {% endfor %}, &nbsp;
+        Mode: {{pData.mode}}
         <br>
     </li>
     {% endfor %}
@@ -93,13 +94,22 @@
 
     <!-- CASE: GIVE_UP_PROGRAM -->
     {% if trial.event == "GIVE_UP_TASK" %}
-    <div class='task' style='display:inline-block;'>
+    <div class='task' style='display:inline-block; color:red;'>
       GIVE UP
     </div>
     {% endif %}
-
+    <!-- CASE: SHOW_SOLUTION -->
+    {% if trial.event == "SHOW_SOLUTION" %}
+    <div class='task' style='display:inline-block; color:orange;'>
+      SHOW SOLUTION
+    </div>
+    {% endif %}
 
     {% endfor %} <!-- TRAIL LOOP -->
+
+    <!-- SUMMARY -->
+    {{ part.summary }}
+
   </div> <!-- TRIALS -->
   {% endfor %}
 

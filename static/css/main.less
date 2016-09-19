@@ -42,6 +42,25 @@ code{
     color:@purple;
 }
 
+table.progress {
+    border-collapse: collapse;
+    table-layout:fixed;
+    width:auto;
+    border:none;
+    margin:10px;
+    font-size:0.7em;
+    th, td {
+        border:1px solid #bbb;
+        width:100px;
+        padding-left:10px;
+        padding-right:10px;
+        word-break: break-all;
+    }
+    td[isSuccess='True'] { background-color:green; }
+    td[isSuccess='False'] { background-color:red; }
+}
+
+
 table.simple {
     border-collapse: collapse;
     table-layout:fixed;
