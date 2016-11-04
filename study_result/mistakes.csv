@@ -1,0 +1,251 @@
+tii,tid,pid,mode,mistake,detail,feedback,isCritical
+2,tutorial_arith_1,25,b,Ambiguous cases,"For input+1, user provided 1->2 twice",,
+8,task_number_sort,15,e,Ambiguous cases,"For sorting, all outputs are reversed input",,
+8,task_number_sort,19,b,Ambiguous cases,"For sorting, all outputs are reversed input",,
+8,task_number_sort,27,e,Ambiguous cases,"For sorting, all outputs are reversed input",,
+4,tutorial_sum,7,e,Ambiguous cases,"For sum, all outputs are counts of input",,
+10,task_filter_numbers,8,b,Ambiguous cases,Insufficient to find the correct conditional,,TRUE
+10,task_filter_numbers,12,b,Ambiguous cases,Insufficient to find the correct conditional,,TRUE
+10,task_filter_numbers,30,b,Ambiguous cases,Insufficient to find the correct conditional,,TRUE
+10,task_filter_numbers,19,b,Ambiguous cases,Insufficient to find the correct conditional,,
+10,task_filter_numbers,23,b,Ambiguous cases,Insufficient to find the correct conditional,,
+10,task_filter_numbers,26,e,Ambiguous cases,Insufficient to find the correct conditional,,
+10,task_filter_numbers,28,e,Ambiguous cases,Insufficient to find the correct conditional,,
+10,task_filter_numbers,29,e,Ambiguous cases,Insufficient to find the correct conditional,,
+7,task_three_step_arith,21,e,Ambiguous cases,kept trying with a single case,,
+7,task_three_step_arith,23,b,Ambiguous cases,kept trying with a single case,,
+7,task_three_step_arith,4,b,Ambiguous cases,single case,,TRUE
+7,task_three_step_arith,8,b,Ambiguous cases,single case,,TRUE
+7,task_three_step_arith,12,b,Ambiguous cases,single case,,TRUE
+7,task_three_step_arith,19,b,Ambiguous cases,single case,,TRUE
+8,task_number_sort,4,b,Ambiguous cases,single case,,TRUE
+8,task_number_sort,22,b,Ambiguous cases,single case,,TRUE
+8,task_number_sort,30,b,Ambiguous cases,single case,,TRUE
+10,task_filter_numbers,22,b,Ambiguous cases,single case,,TRUE
+3,tutorial_arith_2,9,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,12,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,19,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,20,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,22,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,23,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,24,b,Ambiguous cases,single case,,
+3,tutorial_arith_2,27,e,Ambiguous cases,single case,,
+3,tutorial_arith_2,29,e,Ambiguous cases,single case,,
+7,task_three_step_arith,1,e,Ambiguous cases,single case,,
+7,task_three_step_arith,7,e,Ambiguous cases,single case,,
+7,task_three_step_arith,10,b,Ambiguous cases,single case,,
+7,task_three_step_arith,27,e,Ambiguous cases,single case,,
+8,task_number_sort,25,b,Ambiguous cases,single case,,
+10,task_filter_numbers,14,e,Ambiguous cases,single case,,
+10,task_filter_numbers,20,b,Ambiguous cases,single case,,
+10,task_filter_numbers,21,e,Ambiguous cases,single case,,
+1,tutorial_1,19,b,Empty cases,"Clicked ""Teach Computer"" without putting any output; Trying out",,
+6,tutorial_filter_1,19,b,Empty cases,Last case last column is empty,,
+6,tutorial_filter_1,1,e,Empty cases,Last case last column is empty,EMPTY_CELL,
+7,task_three_step_arith,8,b,Empty cases,Last case last column is empty,,
+9,task_filter_words_by_length,21,e,Empty cases,Last case last column is empty,EMPTY_CELL,
+4,tutorial_sum,19,b,Empty cases,Left the last case empty,,
+3,tutorial_arith_2,14,e,Missing step,Did not add a crucial step ,NO_PROGRAM_FOUND,
+3,tutorial_arith_2,23,b,Missing step,Did not add a crucial step ,,
+3,tutorial_arith_2,27,e,Missing step,Did not add a crucial step ,NO_PROGRAM_FOUND,
+3,tutorial_arith_2,30,b,Missing step,Did not add a crucial step ,,
+9,task_filter_words_by_length,4,b,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,TRUE
+9,task_filter_words_by_length,20,b,Missing step,Filtering without T or F,,TRUE
+10,task_filter_numbers,4,b,Missing step,Filtering without T or F,,TRUE
+10,task_filter_numbers,10,b,Missing step,Filtering without T or F,,TRUE
+11,task_extract_and_filter,4,b,Missing step,Filtering without T or F,,TRUE
+11,task_extract_and_filter,10,b,Missing step,Filtering without T or F,,TRUE
+11,task_extract_and_filter,12,b,Missing step,Filtering without T or F,,TRUE
+6,tutorial_filter_1,1,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+6,tutorial_filter_1,2,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+6,tutorial_filter_1,4,b,Missing step,Filtering without T or F,,
+6,tutorial_filter_1,7,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+6,tutorial_filter_1,8,b,Missing step,Filtering without T or F,,
+6,tutorial_filter_1,9,b,Missing step,Filtering without T or F,,
+6,tutorial_filter_1,13,e,Missing step,Filtering without T or F,Filter_WITHOUT_TF,
+6,tutorial_filter_1,14,e,Missing step,Filtering without T or F,Filter_WITHOUT_TF,
+6,tutorial_filter_1,20,b,Missing step,Filtering without T or F,,
+9,task_filter_words_by_length,1,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+9,task_filter_words_by_length,8,b,Missing step,Filtering without T or F,,
+9,task_filter_words_by_length,9,b,Missing step,Filtering without T or F,,
+9,task_filter_words_by_length,11,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+9,task_filter_words_by_length,13,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+9,task_filter_words_by_length,14,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+9,task_filter_words_by_length,29,e,Missing step,Filtering without T or F,FIlter_WITHOUT_TF,
+9,task_filter_words_by_length,30,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,1,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,2,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,5,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,6,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,7,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,9,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,11,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,12,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,15,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,17,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,24,b,Missing step,Filtering without T or F,,
+10,task_filter_numbers,26,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,27,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,28,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+10,task_filter_numbers,29,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+11,task_extract_and_filter,18,e,Missing step,Filtering without T or F,FILTER_WITHOUT_TF,
+7,task_three_step_arith,3,e,Missing step,Missing Input-1,NO_PROGRAM_FOUND,
+7,task_three_step_arith,12,b,Missing step,Missing Input-1,,
+7,task_three_step_arith,18,e,Missing step,Missing Input-1,NO_PROGRAM_FOUND,
+7,task_three_step_arith,27,e,Missing step,Missing Input-1,NO_PROGRAM_FOUND,
+9,task_filter_words_by_length,8,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,9,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,10,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,12,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,19,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,20,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,23,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,24,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,30,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,8,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,9,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,19,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,20,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,22,b,Missing step,T and F without numbers,,TRUE
+11,task_extract_and_filter,30,b,Missing step,T and F without numbers,,TRUE
+9,task_filter_words_by_length,1,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,2,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,3,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,5,b,Missing step,T and F without numbers,,
+9,task_filter_words_by_length,7,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,11,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,16,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,18,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,22,b,Missing step,T and F without numbers,,
+9,task_filter_words_by_length,25,b,Missing step,T and F without numbers,,
+9,task_filter_words_by_length,26,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,27,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,28,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+9,task_filter_words_by_length,29,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+11,task_extract_and_filter,11,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+11,task_extract_and_filter,14,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+11,task_extract_and_filter,21,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+11,task_extract_and_filter,23,b,Missing step,T and F without numbers,,
+11,task_extract_and_filter,24,b,Missing step,T and F without numbers,,
+11,task_extract_and_filter,27,e,Missing step,T and F without numbers,TF_WITHOUT_NUMBER,
+11,task_extract_and_filter,4,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,8,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,9,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,10,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,12,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,19,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,20,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,30,b,Missing step,Trying to get substring of filtered list,,TRUE
+11,task_extract_and_filter,1,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,2,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,3,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,5,b,Missing step,Trying to get substring of filtered list,,
+11,task_extract_and_filter,7,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,11,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,13,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,14,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,15,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,16,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,17,b,Missing step,Trying to get substring of filtered list,,
+11,task_extract_and_filter,24,b,Missing step,Trying to get substring of filtered list,,
+11,task_extract_and_filter,28,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+11,task_extract_and_filter,29,e,Missing step,Trying to get substring of filtered list,FILTER_AND_EXTRACT,
+4,tutorial_sum,15,e,Trying formula,1+1,NO_PROGRAM_FOUND,
+8,task_number_sort,22,b,Trying formula,"Describing meaning as well ""1,-1,reverse input""",,TRUE
+3,tutorial_arith_2,18,e,Trying formula,"Imput+1, *2, *3, +1, Input*2",NO_PROGRAM_FOUND,
+3,tutorial_arith_2,15,e,Trying formula,"Input+1, +1",NO_PROGRAM_FOUND,
+7,task_three_step_arith,14,e,Trying formula,"Used (2)*(0),  (1+1), ",NO_PROGRAM_FOUND,TRUE
+3,tutorial_arith_2,12,b,Trying formula,Used (2*2) which is the formula for the next step,,
+3,tutorial_arith_2,6,b,Trying formula,Used (Input+1) and x2,,
+7,task_three_step_arith,6,b,Trying formula,"Used *0, 2*0, etc",,TRUE
+2,tutorial_arith_1,20,b,Trying formula,Used +1 and * 2,,
+1,tutorial_1,29,e,Trying formula,Used +1; ,,
+11,task_extract_and_filter,6,b,Trying formula,"Using ""<2014"", ""<=2014""",,TRUE
+10,task_filter_numbers,13,e,Trying formula,"Using ""1/4"", ""4/4""",NO_PROGRAM_FOUND,
+10,task_filter_numbers,14,e,Trying formula,"Using ""1/4"", ""4/4""",NO_PROGRAM_FOUND,
+8,task_number_sort,14,e,Trying formula,"Using ""increasing order"" instead of T, F",No_PROGRAM_FOUND,
+7,task_three_step_arith,30,b,Trying formula,Using +1,,TRUE
+8,task_number_sort,6,b,Trying formula,"Using 1<2<3<4, -1<1 instead of T, F",,TRUE
+9,task_filter_words_by_length,6,b,Trying formula,"Using predicates such as ""are>2"", ""am<=2"", ""green>2""",,TRUE
+9,task_filter_words_by_length,14,e,Trying formula,"Using predicates such as ""input>2""",NO_PROGRAM_FOUND,
+3,tutorial_arith_2,15,e,Unnecessary steps,Added a unnecessary empty step before OUT,EMPTY_CELL,
+3,tutorial_arith_2,20,b,Unnecessary steps,Added a unnecessary empty step before OUT,,
+3,tutorial_arith_2,6,b,Unnecessary steps,Added a unnecessary empty step before OUT,,
+3,tutorial_arith_2,18,e,Unnecessary steps,Added a unnecessary empty step before OUT,EMPTY_CELL,
+9,task_filter_words_by_length,15,e,Unnecessary steps,Added a unnecessary empty step before OUT,,
+4,tutorial_sum,15,e,Unnecessary steps,Added a unnecessary steps for counting numbers (could not pass because of the step),,TRUE
+6,tutorial_filter_1,13,e,Unnecessary steps,Adding steps for excluded values,,
+6,tutorial_filter_1,14,e,Unnecessary steps,Adding steps for excluded values,,
+6,tutorial_filter_1,13,e,Unnecessary steps,Adding steps for individual values,,
+6,tutorial_filter_1,15,e,Unnecessary steps,Adding steps for individual values (e.g. T; 11;F;8),NO_PROGRAM_FOUND,
+6,tutorial_filter_1,11,e,Unnecessary steps,"Adding steps for True and False case separately (F,8,9; and T,11,10)",,
+6,tutorial_filter_1,27,e,Unnecessary steps,"Adding steps for True and False case separately (F,8,9; and T,11,10)",NO_PROGRAM_FOUND,
+6,tutorial_filter_1,30,b,Unnecessary steps,"Adding steps for True and False case separately (F,8,9; and T,11,10)",,
+11,task_extract_and_filter,29,e,Unnecessary steps,"Duplicated predicates (T,T,F,F)",,
+10,task_filter_numbers,13,e,Unnecessary steps,"Provided result of division (0.25,1,1.25)",NO_PROGRAM_FOUND,
+10,task_filter_numbers,22,b,Unnecessary steps,"Providing a single, filtered T, which is not necessary",,
+9,task_filter_words_by_length,15,e,Unnecessary steps,Providing list of skipped words,NO_PROGRAM_FOUND,TRUE
+10,task_filter_numbers,30,b,Unnecessary steps,"Providing predicates of filtered list (e.g. T,T)",,TRUE
+9,task_filter_words_by_length,30,b,Unnecessary steps,"Providing predicates of filtered list (e.g. T,T)",,
+11,task_extract_and_filter,24,b,Unnecessary steps,"Providing predicates of filtered list (e.g. T,T)",,
+11,task_extract_and_filter,30,b,Unnecessary steps,"Providing predicates of filtered list (e.g. T,T)",,
+10,task_filter_numbers,10,b,Unnecessary steps,"Using ""4"", which is operand of conditional",,TRUE
+10,task_filter_numbers,15,e,Unnecessary steps,"Using ""4"", which is operand of conditional",NO_PROGRAM_FOUND,
+7,task_three_step_arith,15,e,Unnecessary steps,,NO_PROGRAM_FOUND,TRUE
+7,task_three_step_arith,30,b,Unnecessary steps,,,TRUE
+7,task_three_step_arith,20,b,Unnecessary steps,,,
+8,task_number_sort,30,b,Unnecessary steps,,,
+11,task_extract_and_filter,22,b,Wrong input,"Inconsistent input (the second column is T,F,T,F; the third column is =2014)",,TRUE
+1,tutorial_1,8,b,Wrong program,1->5; Trying out.,,
+2,tutorial_arith_1,7,e,Wrong program,Created Input*2 insetad of Input+1,,
+2,tutorial_arith_1,12,b,Wrong program,Created Input*2 insetad of Input+1,,
+2,tutorial_arith_1,17,b,Wrong program,Created Input*2 insetad of Input+1,,
+6,tutorial_filter_1,1,e,Wrong program,inconsistent output,NO_PROGRAM_FOUND,
+7,task_three_step_arith,19,b,Wrong program,Out was wrong all the time,,TRUE
+11,task_extract_and_filter,23,b,Wrong program,The output does not match the task,,TRUE
+1,tutorial_1,25,b,Wrong program,Trying out different output values,,
+7,task_three_step_arith,24,b,Wrong program,Wrong calculation,,
+5,tutorial_text_extraction,22,b,Wrong program,yes>yes;  yes>no; ,,
+8,task_number_sort,4,b,Wrong step,Could not provide correctly sorted list,,
+8,task_number_sort,29,e,Wrong step,Could not provide correctly sorted list,NO_PROGRAM_FOUND,
+9,task_filter_words_by_length,22,b,Wrong step,"Formatting error: Using ""No"" and ""Yes"" for ""T"" and ""F""",,
+6,tutorial_filter_1,1,e,Wrong step,"Formatting error: Using (FTFT) instead of F, T, F, T",NO_PROGRAM_FOUND,
+6,tutorial_filter_1,29,e,Wrong step,"Formatting error: Using (FTFT) instead of F, T, F, T",NO_PROGRAM_FOUND,
+9,task_filter_words_by_length,20,b,Wrong step,"Formatting error: Using (FTFT) instead of F, T, F, T",,
+3,tutorial_arith_2,29,e,Wrong step,Provided inaccurate output (4>5>18),No_PROGRAM_FOUND,
+3,tutorial_arith_2,4,b,Wrong step,Provided inaccurate step values for input+1,,
+8,task_number_sort,30,b,Wrong step,Provided T and F for sorting,,
+11,task_extract_and_filter,6,b,Wrong step,"Providing a single, filtered T, which is not necessary",,TRUE
+11,task_extract_and_filter,15,e,Wrong step,"Providing a single, filtered T, which is not necessary",NO_PROGRAM_FOUND,
+6,tutorial_filter_1,4,b,Wrong step,"Providing input numbers and T,F at the same time (11,8,9,10,T,T,F,F)",,
+6,tutorial_filter_1,30,b,Wrong step,"Providing input numbers and T,F at the same time (e.g. t, 11; t=11)",,
+6,tutorial_filter_1,19,b,Wrong step,"Providing input numbers and T,F at the same time (F 11,10)",,
+6,tutorial_filter_1,15,e,Wrong step,"Providing input numbers and T,F at the same time (F 8,9)",No_PROGRAM_FOUND,
+11,task_extract_and_filter,18,e,Wrong step,"Providing input numbers and T,F at the same time (T 12000,F 9500, T 1400)",NO_PROGRAM_FOUND,
+10,task_filter_numbers,22,b,Wrong step,"Providing input numbers and T,F at the same time (T,4,T)",,
+6,tutorial_filter_1,9,b,Wrong step,"Providing input numbers and T,F at the same time (T11,T10,F8, F9)",,
+6,tutorial_filter_1,11,e,Wrong step,"Providing input numbers and T,F at the same time (T11,T10,F8, F9)",NO_PROGRAM_FOUND,
+9,task_filter_words_by_length,15,e,Wrong step,Providing single T or F when series is needed,NO_PROGRAM_FOUND,TRUE
+10,task_filter_numbers,6,b,Wrong step,Providing single T or F when series is needed,,TRUE
+6,tutorial_filter_1,2,e,Wrong step,Providing single T or F when series is needed,NO_PROGRAM_FOUND,
+6,tutorial_filter_1,6,b,Wrong step,Providing single T or F when series is needed,,
+6,tutorial_filter_1,8,b,Wrong step,Providing single T or F when series is needed,,
+6,tutorial_filter_1,9,b,Wrong step,Providing single T or F when series is needed,,
+6,tutorial_filter_1,25,b,Wrong step,Providing single T or F when series is needed,,
+8,task_number_sort,6,b,Wrong step,Providing single T or F when series is needed,,
+9,task_filter_words_by_length,6,b,Wrong step,Providing single T or F when series is needed,,
+10,task_filter_numbers,15,e,Wrong step,Providing single T or F when series is needed,NO_PROGRAM_FOUND,
+4,tutorial_sum,19,b,Wrong step,"Trying 'dfv' and 'cv', 'cv3', 'x' for unknown reason",,
+9,task_filter_words_by_length,15,e,Wrong step,"Using ""2"", which is operand of conditional",NO_PROGRAM_FOUND,TRUE
+7,task_three_step_arith,15,e,Wrong step,wrong calculation,NO_PROGRAM_FOUND,TRUE
+7,task_three_step_arith,20,b,Wrong step,wrong calculation,,TRUE
+7,task_three_step_arith,9,b,Wrong step,wrong calculation,,
+7,task_three_step_arith,17,b,Wrong step,wrong calculation,,
+7,task_three_step_arith,25,b,Wrong step,wrong calculation,,
+7,task_three_step_arith,26,e,Wrong step,wrong calculation,NO_PROGRAM_FOUND,
+7,task_three_step_arith,30,b,Wrong step,Wrong calculation,,
+10,task_filter_numbers,16,e,Wrong step,Wrong calculation,,
+10,task_filter_numbers,29,e,Wrong step,Wrong calculation,,
+11,task_extract_and_filter,21,e,Wrong step,Wrong calculation (inconsistent T and F),NO_PROGRAM_FOUND,TRUE
+10,task_filter_numbers,17,b,Wrong step,Wrong calculation (inconsistent T and F),,
+11,task_extract_and_filter,27,e,Wrong step,Wrong calculation (inconsistent T and F),NO_PROGRAM_FOUND,

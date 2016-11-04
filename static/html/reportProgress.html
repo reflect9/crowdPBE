@@ -33,8 +33,9 @@
     <tr>
       {% for task in tasks %} 
         <td  isSuccess='{{ task.summary.isSuccess }}'>
-          {{ task.summary.numInference }} trials
-          <br>({{ task.summary.duration }}sec)
+          <span class='trials'>{{ task.summary.numInference }}</span><br>
+          <span class='success'>{{ task.summary.isSuccess }}</span><br>
+          <span class='duration'>{{ task.summary.duration }}</span>
         </td>  
       {% endfor %}
     </tr>
@@ -47,8 +48,9 @@
     <tr>
       {% for task in tasks %} 
         <td  isSuccess='{{ task.summary.isSuccess }}'>
-          {{ task.summary.numInference }} trials
-          <br>({{ task.summary.duration }}sec)
+          <span class='trials'>{{ task.summary.numInference }}</span><br>
+          <span class='success'>{{ task.summary.isSuccess }}</span><br>
+          <span class='duration'>{{ task.summary.duration }}</span>
         </td>  
       {% endfor %}
     </tr>

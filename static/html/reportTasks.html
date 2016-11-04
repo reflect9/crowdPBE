@@ -51,6 +51,7 @@
   <!-- TASK DATA -->
   {% for part in task %}
   <div class='trials'>
+    <label>{{ loop.index }}{{allData[loop.index0].mode[0]}}</label>
     {% for trial in part.trials %}
 
     {% if trial.event == "INFER_PROGRAM" %}
@@ -108,7 +109,7 @@
     {% endfor %} <!-- TRAIL LOOP -->
 
     <!-- SUMMARY -->
-    {{ part.summary }}
+    {{ part.summary.failMessages }}
 
   </div> <!-- TRIALS -->
   {% endfor %}

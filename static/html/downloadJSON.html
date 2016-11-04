@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOWNLOAD JSON</title>
+    <script src="js/lib/jquery-2.0.3.min.js" type="text/javascript"></script>
+	<script>
+	var arr = [];
+	{% for data in dataList %}
+		arr.push( {{ data|safe }} );
+	{% endfor %}
+
+	$(document).ready(function(){
+		for(var i in arr) {
+			var blob = new Blob([JSON.stringify(arr[i])], {type: "application/json"});
+			var url  = URL.createObjectURL(blob);
+
+			var a = document.createElement('a');
+			a.download    = "report"+i;
+			a.href        = url;
+			a.textContent = "Download report"+i+".json    ";
+			document.getElementById('content').appendChild(a);	
+		}
+	});
+    </script>
+</head>
+<body>
+	<div id='content'></div>
+	
+</body>
+</html>
+

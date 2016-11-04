@@ -14,7 +14,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 
 tid_list = ["tutorial_1", "tutorial_arith_1", "tutorial_arith_2", "tutorial_sum", "tutorial_text_extraction", "tutorial_filter_1", "task_three_step_arith", "task_number_sort", "task_filter_words_by_length", "task_filter_numbers", "task_extract_and_filter"]
-
+code_list = ['EMPTY_CELL','INCONSISTENT_TYPE','FILTER_WITHOUT_TF','FILTER_AND_EXTRACT','TF_WITHOUT_NUMBER','NO_PROGRAM_FOUND']
 
 def id_generator(size=4, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(size))
@@ -31,6 +31,12 @@ class Result2(ndb.Model):
 class Result3(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     data = ndb.TextProperty()
+
+### MIXED-INITIATIVE PBE (Nov4)
+class Result4(ndb.Model):
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    data = ndb.TextProperty()
+
 
 class Log(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
@@ -108,22 +114,23 @@ def generateReportOneTrial(taskID, LogData):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        count_baseline = 0
-        count_experimental = 0
-        result_all = Result3.query()
-        for result in result_all:
-            data = json.loads(result.data)
-            if data["mode"]=="baseline":
-                count_baseline+=1
-            elif data["mode"]=="experimental":
-                count_experimental += 1
-        print "baseline:", count_baseline, "experimental:", count_experimental
-        if count_baseline<count_experimental:
-            mode = "baseline"
-        else:
-            mode = "experimental"
-        # mode = self.request.get("mode", default_value="hard")
-        # mode = random.choice(["experimental","baseline"])
+        mode = self.request.get("mode",default_value="unspecified")
+        print "mode", mode 
+        if mode == "unspecified":
+            count_baseline = 0
+            count_experimental = 0
+            result_all = Result3.query()
+            for result in result_all:
+                data = json.loads(result.data)
+                if data["mode"]=="baseline":
+                    count_baseline+=1
+                elif data["mode"]=="experimental":
+                    count_experimental += 1
+            print "baseline:", count_baseline, "experimental:", count_experimental
+            if count_baseline<count_experimental:
+                mode = "baseline"
+            else:
+                mode = "experimental"
         debug = self.request.get("debug", default_value="no")
         template_values = { 
             'mode':mode,
@@ -155,7 +162,13 @@ class ReportHandler(webapp2.RequestHandler):
         if mode=="json":
             res = Result3.query()
             dataList = [r.data for r in res]
-            self.response.out.write(dataList)
+            template_values = { 
+                'dataList':dataList,
+                'jsonFileName':'report.json'
+            }
+            template = JINJA_ENVIRONMENT.get_template('static/html/downloadJSON.html')
+            html = template.render(template_values)
+            self.response.out.write(html)
         elif mode=="tasks":
             result_all = Result3.query()
             allData = [json.loads(result.data) for result in result_all]
@@ -188,18 +201,6 @@ class ReportHandler(webapp2.RequestHandler):
             result_all = Result3.query()
             allData = [json.loads(result.data) for result in result_all]
             
-        elif mode=="json":
-            # var obj = {a: 123, b: "4 5 6"};
-            # var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
-
-            # var a = document.createElement('a');
-            # a.href = 'data:' + data;
-            # a.download = 'data.json';
-            # a.innerHTML = 'download JSON';
-
-            # var container = document.getElementById('container');
-            # container.appendChild(a);
-            pass
         elif mode=="progress":
             result_all = Result3.query()
             allData = [json.loads(result.data) for result in result_all]
