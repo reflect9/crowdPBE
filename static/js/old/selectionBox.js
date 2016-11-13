@@ -20,7 +20,7 @@
   * @param {string} edgeColor Hexcode for color of each edge. By default, #65f166
   * @param {element} edgeContainer Element inside which the edges are inserted. By default, body
   */
-Vespy.SelectionBox = function(edgeSize, edgeColor, edgeContainer) {
+MixedVespy.SelectionBox = function(edgeSize, edgeColor, edgeContainer) {
 	edgeSize = edgeSize ? edgeSize : 2;
 	edgeColor = edgeColor ? edgeColor : '#ff0000';
 	edgeContainer = edgeContainer ? edgeContainer : $("document").get(0);

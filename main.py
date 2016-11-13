@@ -35,7 +35,13 @@ class Result3(ndb.Model):
 ### MIXED-INITIATIVE PBE (Nov4)
 class Result4(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
+    workerID = ndb.StringProperty()
     data = ndb.TextProperty()
+class Log4(ndb.Model):
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    workerID = ndb.StringProperty()
+    data = ndb.TextProperty()    
+
 
 
 class Log(ndb.Model):
@@ -115,27 +121,27 @@ def generateReportOneTrial(taskID, LogData):
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         mode = self.request.get("mode",default_value="unspecified")
+        workerID = self.request.get("workerID",default_value="unknown")
         print "mode", mode 
         if mode == "unspecified":
-            count_baseline = 0
-            count_experimental = 0
-            result_all = Result3.query()
+            modeCounts = {
+                "fixed":0,
+                "mixed_trial":0,
+                "mixed_task":0,
+                "mixed_all":0
+            }
+            result_all = Result4.query()
             for result in result_all:
                 data = json.loads(result.data)
-                if data["mode"]=="baseline":
-                    count_baseline+=1
-                elif data["mode"]=="experimental":
-                    count_experimental += 1
-            print "baseline:", count_baseline, "experimental:", count_experimental
-            if count_baseline<count_experimental:
-                mode = "baseline"
-            else:
-                mode = "experimental"
+                modeCounts[data["mode"]] += 1
+            print modeCounts
+            modeWithSmallestCount = sorted(modeCounts.items(), key=operator,itemgetter(1), reversed=False)[0]
         debug = self.request.get("debug", default_value="no")
         template_values = { 
-            'mode':mode,
+            'mode':modeWithSmallestCount,
             'debug':debug,
             'taskcode': id_generator(),
+            'workerID': workerID
         }
         template = JINJA_ENVIRONMENT.get_template('static/html/main.html')
         html = template.render(template_values)
@@ -144,9 +150,16 @@ class MainHandler(webapp2.RequestHandler):
 class SubmitHandler(webapp2.RequestHandler):
     def post(self):
         data = self.request.get("data")
-        res = Result3()
-        res.data = data
-        res.put()
+        workerID = self.request.get("workerID")
+        res = Result4.query(Result4.workerID == workerID).fetch()
+        if len(res) == 0:
+            newResult = Result4()
+        else:
+            newResult = res.get(0)
+        newResult.data = data
+        newResult.workerID = workerID
+        newResult.put()
+
 class LogHandler(webapp2.RequestHandler):
     def get(self):
         ip = self.request.remote_addr

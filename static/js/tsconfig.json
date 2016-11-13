@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"noImplicitAny" : false,
+		"watch": true,
+		"outDir": "./built",
+		"outFile": "script.js"
+	},
+	"compileOnSave": true,
+	"files":[
+		"typings/index.d.ts",
+		"utils.ts",
+		"LogItem.ts",
+		"Log.ts",
+		"Analyzer.ts",
+		"MixedPBE.ts",
+		"crowdPlanner.ts",
+		"TaskView.ts",
+		"TaskModel.ts",
+		"TaskController.ts",
+		"taskData.ts",
+		"Trial.ts",
+		"Program.ts"
+	]
+}

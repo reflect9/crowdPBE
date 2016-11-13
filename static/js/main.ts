@@ -1,8 +1,9 @@
-Data = {};
-log = new Log(workerID);
-Timer = {};
-Programs = {};
-last_task_tid = undefined;
+/// <reference path="task.ts" />
+let Data = {};
+let log = new Log("TBD");
+let Timer = {};
+let Programs = {};
+let last_task_tid = undefined;
 
 function skipToTutorial() {
 	$(".introduction").addClass("hidden");

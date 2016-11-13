@@ -1,17 +1,18 @@
-CrowdPlanner = {
-	inferSingleStep: function(previousSteps, currentStep) {
+class CrowdPlanner {
+    public inferSingleStep(previousSteps, currentStep): Program[] {
 		var matchingPrograms=[];
-		for(var opKey in CrowdPlanner.operations) {
-			var opObj = CrowdPlanner.operations[opKey];
+		for(var opKey in this.operations) {
+			var opObj = this.operations[opKey];
 			try {
 				var pList = opObj.generate(previousSteps, currentStep);
 				if(_.isArray(pList))  matchingPrograms=matchingPrograms.concat(pList);
 			} catch(e) {	console.log(e);	  }
 		};
 		return matchingPrograms;
-	},
-	runUnitTest: function() {
-		_.each(CrowdPlanner.operations, function(opObj, opKey) {
+	}
+
+    public runUnitTest() {
+		_.each(this.operations, function(opObj, opKey) {
 			try {
 				console.log("========================"+opKey);
 				if(opObj.unitTests) {
@@ -38,17 +39,17 @@ CrowdPlanner = {
 				console.error(e.stack);
 			}
 		});
-	},
+	}
 
-	operations: {
-		substring: {  // character C의 n번째 occurrence를 경계삼아서 substring. 
-			generate: function(Is, O) {
-				var Ps = [];
+    public operations = {
+        substring: {  // character C의 n번째 occurrence를 경계삼아서 substring. 
+			generate: function(Is: string[][], O: string[]) : Program[] {
+				var Ps: Program[] = [];
 				// VALIDATING OUTPUT
-				if(O.length==0 || !isStringList(O)) return false;
+				if(O.length==0 || !isStringList(O)) return [];
 				var oValues = _.map(O, function(v){return str2array(v); });
 				var flat_O_values = _.flatten(oValues);
-				if(flat_O_values.length==0) return false;
+				if(flat_O_values.length==0) return [];
 				_.each(Is, function(I, I_index) {
 					// VALIDATE INPUT
 					if(!isStringList(I) || I.length==0) return false;
@@ -65,7 +66,7 @@ CrowdPlanner = {
 					if (isAllSame) return false;	// don't need to substring 
 					// INFER
 					var validCombination = [];
-					var sharedTokens = CrowdPlanner.get_common_tokens(flat_I_values);
+					var sharedTokens = this.get_common_tokens(flat_I_values);
 					for(var s_tok_i in sharedTokens) {
 						for(var e_tok_i in sharedTokens) {
 							var s_t = sharedTokens[s_tok_i];	var e_t = sharedTokens[e_tok_i];
@@ -120,33 +121,29 @@ CrowdPlanner = {
 								validCombination.push({'from':s_t, 'to':e_t, 'include_from':false, 'include_to':true});
 						} // END OF e_tok_i
 					} // END OF s_tok_i
-					// console.log("found substring combinations: "+validCombination);
 					// CREATING P
 					_.each(validCombination, function(vc) {
-						Ps.push({
-							type:'substring',      
-							param:{
-								inputIndex: ""+I_index,
-								source:I_index,
-								from:vc["from"],
-								to:vc["to"],
-								include_from:vc["include_from"],
-								include_to:vc["include_to"],
-							},
-						});
+						Ps.push(new Program('substring', {
+                            inputIndex: ""+I_index,
+                            source:I_index,
+                            from:vc["from"],
+                            to:vc["to"],
+                            include_from:vc["include_from"],
+                            include_to:vc["include_to"],
+                        }));
 					});
 				});
 				if(Ps.length>0) return [Ps[0]];
 				else return Ps;
 			},
-			execute: function(previousSteps, P) {
-				var inputValues = previousSteps[P.param.source];
+			execute: function(previousSteps: string[][], P: Program) {
+				var inputValues = previousSteps[P.param['source']];
 				var resultData = _.map(inputValues, function(iv){
 					var start_pos, end_pos;
-					start_pos = (P.param.include_from)? iv.indexOf(P.param.from): iv.indexOf(P.param.from)+P.param.from.length;
-					if(iv.indexOf(P.param.to,start_pos+1)==-1) end_pos = iv.length;
+					start_pos = (P.param['include_from'])? iv.indexOf(P.param['from']): iv.indexOf(P.param['from'])+P.param['from'].length;
+					if(iv.indexOf(P.param['to'], start_pos+1)==-1) end_pos = iv.length;
 					else {
-						end_pos = (P.param.include_to)? iv.indexOf(P.param.to,start_pos+1)+P.param.to.length: iv.indexOf(P.param.to,start_pos+1);
+						end_pos = (P.param['include_to'])? iv.indexOf(P.param['to'],start_pos+1)+P.param['to'].length: iv.indexOf(P.param['to'],start_pos+1);
 					}
 					start_pos = Math.max(0,start_pos); end_pos = Math.max(0,end_pos);
 					return iv.substring(start_pos,end_pos);
@@ -249,10 +246,10 @@ CrowdPlanner = {
 		// 		return Ps;	
 		// 	},
 		// 	execute: function(previousSteps, P) {
-		// 		var I1 = previousSteps[P.param.text_A];
-		// 		var I2 = previousSteps[P.param.text_B];
+		// 		var I1 = previousSteps[P.param['text_A'];
+		// 		var I2 = previousSteps[P.param['text_B'];
 		// 		return _.map(I1, function(st1, idx) {
-		// 			return st1 + P.param.connector + I2[idx];
+		// 			return st1 + P.param['connector'] + I2[idx];
 		// 		});
 		// 	},
 		// 	unitTests: [
@@ -271,28 +268,25 @@ CrowdPlanner = {
 		// },
 		text_length: {
 			// text길이 구하기 
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
-				var oValues = _.map(O, function(ov){ return str2array(ov, "number"); }); 
+				var oValues = _.map(O, function(ov){ return str2arrayNumber(ov); }); 
 				_.each(Is, function(I,I_index){
 					var input_values_as_text = _.map(I, function(iv){	return str2array(iv); });
 					var input_values_length = _.map(input_values_as_text, function(iv){
 						return _.map(iv, function(v){  return v.length; }); 
 					});
 					if(isSameArray(input_values_length, oValues)) {
-						Ps.push({
-							type:"text_length",
-							param: {
-								source: I_index,
-								inputIndex: ""+I_index,
-							}
-						});
+						Ps.push(new Program("text_length",{
+                            source: I_index,
+                            inputIndex: ""+I_index,
+                        }));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
 				return _.map(I, function(v){return v.length; });
 			},
 			unitTests: [
@@ -326,25 +320,22 @@ CrowdPlanner = {
 		},
 		count: {
 			// 리스트에서 element갯수 
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				var oValues = _.map(O, function(v){return parseInt(v); }); //  O: ["2", "2"]
 				_.each(Is, function(I,I_index){
 					var length_of_input = _.map(I, function(iv){ return str2array(iv).length; });
 					if(isSameArray(length_of_input, oValues)) {
-						Ps.push({
-							type:"count",
-							param: {
+						Ps.push(new Program("count",{
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
 				return _.map(I, function(v){return str2array(v).length; });
 			},
 			unitTests: [
@@ -364,32 +355,29 @@ CrowdPlanner = {
 			]
 		},
 		sum: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				// oValue
 				var oValues = _.map(O, function(v){return parseFloat(v); });
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){
 						return;
 					}
 					var true_sum = _.map(inputValues, function(iv){ return sum(iv); });
 					if(isSameArray(true_sum, oValues)) {
-						Ps.push({
-							type:"sum",
-							param: {
-								source: I_index,
-								inputIndex: ""+I_index,
-							}
-						});
+						Ps.push(new Program("sum",{
+                            source: I_index,
+                            inputIndex: ""+I_index,
+                        }));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 				return _.map(inputValues, function(v){return sum(v); });
 			},
 			unitTests: [
@@ -422,13 +410,13 @@ CrowdPlanner = {
 			]
 		},
 		min: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				// oValue :
-				var oValues = _.map(O, function(v){return str2array(v,"number"); });
+				var oValues = _.map(O, function(v){return str2arrayNumber(v); });
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){
 						return;
 					}
@@ -436,22 +424,19 @@ CrowdPlanner = {
 						return [Math.min.apply(this,iv)]; 
 					});
 					if(isSameArray(true_min, oValues)) {
-						Ps.push({
-							type:"min",
-							param: {
-								source: I_index,
-								inputIndex: ""+I_index,
-							}
-						});
+						Ps.push(new Program("min", {
+                            source: I_index,
+                            inputIndex: ""+I_index,
+                        }));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
-				return _.map(inputValues, function(v){return 
-					Math.min.apply(this,v); 
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
+				return _.map(inputValues, function(v){ 
+                    return Math.min.apply(this,v); 
 				});
 			},
 			unitTests: [
@@ -484,13 +469,13 @@ CrowdPlanner = {
 			]
 		},
 		max: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				// oValue :
-				var oValues = _.map(O, function(v){return str2array(v, "number"); });
+				var oValues = _.map(O, function(v){return str2arrayNumber(v); });
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){
 						return;
 					}
@@ -498,22 +483,19 @@ CrowdPlanner = {
 						return [Math.max.apply(this,iv)]; 
 					});
 					if(isSameArray(true_max, oValues)) {
-						Ps.push({
-							type:"max",
-							param: {
+						Ps.push(new Program("max",{
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
-				return _.map(inputValues, function(v){return 
-					Math.max.apply(this,v); 
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
+				return _.map(inputValues, function(v){
+                    return Math.max.apply(this,v); 
 				});
 			},
 			unitTests: [
@@ -546,13 +528,13 @@ CrowdPlanner = {
 			]
 		},
 		reverse_array: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				var oValues = _.map(O, function(v){return str2array(v); });
 				var isAllOutputValuesEmptyString = _.every(oValues, function(o){
 					return o.length==1 && o[0]=="";
 				});
-				if(isAllOutputValuesEmptyString) return false;
+				if(isAllOutputValuesEmptyString) return [];
 				for(var I_idx in Is) {
 					var I = Is[I_idx];
 					try {
@@ -565,19 +547,16 @@ CrowdPlanner = {
 						return;
 					}
 					if(isSameArray(oValues, I_vals_reversed)) {
-						Ps.push({
-							type:"reverse_array",
-							param:{
+						Ps.push(new Program("reverse_array",{
 								source:I_idx,
 								inputIndex: ""+I_idx
-							}
-						});
+							}));
 					}
 				}
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
 				var result = _.map(I, function(iv){ 
 					var arr =  str2array(iv); 
 					arr.reverse();
@@ -616,12 +595,12 @@ CrowdPlanner = {
 		},
 
 		sort_number: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
-				var oValues = _.map(O, function(v){return str2array(v, "number"); });
+				var oValues = _.map(O, function(v){return str2arrayNumber(v); });
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){
 						return;
 					}
@@ -632,34 +611,28 @@ CrowdPlanner = {
 						return sortGeneral(iv).reverse();
 					});
 					if(isSameArray(sorted_ascending, oValues)) {
-						Ps.push({
-							type:"sort_number",
-							param: {
+						Ps.push(new Program("sort_number", {
 								ascending:true,
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 					if(isSameArray(sorted_descending, oValues)) {
-						Ps.push({
-							type:"sort_number",
-							param: {
+						Ps.push(new Program("sort_number", {
 								ascending:false,
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				if(P.param.ascending) {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")); });	
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				if(P.param['ascending']) {
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)); });	
 				} else {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")).reverse(); });	
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)).reverse(); });	
 				}
 			},
 			unitTests: [
@@ -694,12 +667,12 @@ CrowdPlanner = {
 			]
 		},
 		sort_text: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				// EXCLUDE THE CASE WHERE INPUT IS ALL NUMBERS
 				var isOutputNumber;
 				try {
-					var dummy = _.map(O, function(v){return str2array(v, "number");  });
+					var dummy = _.map(O, function(v){return str2arrayNumber(v);  });
 					 isOutputNumber = true;
 				} catch(o) {
 					if(o=="Not Number") isOutputNumber=false;
@@ -710,7 +683,7 @@ CrowdPlanner = {
 				var isAllOutputValuesEmptyString = _.every(oValues, function(o){
 					return o.length==1 && o[0]=="";
 				});
-				if(isAllOutputValuesEmptyString) return false;
+				if(isAllOutputValuesEmptyString) return [];
 				_.each(Is, function(I,I_index){
 					try {
 						var inputValues = _.map(I, function(iv){ return str2array(iv); });
@@ -724,34 +697,28 @@ CrowdPlanner = {
 						return sortGeneral(iv).reverse();
 					});
 					if(isSameArray(sorted_ascending, oValues)) {
-						Ps.push({
-							type:"sort_text",
-							param: {
+						Ps.push(new Program("sort_text",{
 								ascending:true,
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 					if(isSameArray(sorted_descending, oValues)) {
-						Ps.push({
-							type:"sort_text",
-							param: {
+						Ps.push(new Program("sort_text",{
 								ascending:false,
 								source: I_index,
 								inputIndex: ""+I_index,
-							}
-						});
+							}));
 					}
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				if(P.param.ascending) {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")); });	
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				if(P.param['ascending']) {
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)); });	
 				} else {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")).reverse(); });	
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)).reverse(); });	
 				}
 			},
 			unitTests: [
@@ -787,7 +754,7 @@ CrowdPlanner = {
 		},
 		sort_by_key: {
 			// 키값이 따로 주어짐. 그걸 이용해서 소팅.  
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				var oValues = _.map(O, function(v){return str2array(v); });
 				if(Is.length<2) return [];
@@ -806,37 +773,31 @@ CrowdPlanner = {
 							return _.sortBy(values, function(v,sort_i){ return K_values[value_i][sort_i]; }).reverse();
 						});
 						if(isSameArray(true_sorted_ascending, oValues)) {
-							Ps.push({
-								type:"sort_by_key",
-								param: {
+							Ps.push(new Program("sort_by_key",{
 									ascending:true,
 									source: idxI,
 									key: idxK,
 									inputIndex: ""+idxI+","+idxK,
-								}
-							});
+								}));
 						}
 						if(isSameArray(true_sorted_descending, oValues)) {
-							Ps.push({
-								type:"sort_by_key",
-								param: {
-									ascending:false,
-									source: idxI,
-									key: idxK,
-									inputIndex: ""+idxI+","+idxK,
-								}
-							});
+							Ps.push(new Program("sort_by_key",{
+                                ascending:false,
+                                source: idxI,
+                                key: idxK,
+                                inputIndex: ""+idxI+","+idxK,
+                            }));
 						}
 					}
 				}
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				if(P.param.ascending) {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")); });	
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				if(P.param['ascending']) {
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)); });	
 				} else {
-					return _.map(I, function(iv){ return sortGeneral(str2array(iv,"number")).reverse(); });	
+					return _.map(I, function(iv){ return sortGeneral(str2arrayNumber(iv)).reverse(); });	
 				}
 			},
 			unitTests: [
@@ -875,36 +836,33 @@ CrowdPlanner = {
 			]
 		},
 		arithmetic_single_param: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
-				var oValues = _.map(O, function(v){return str2array(v, "number"); });
+				var oValues = _.map(O, function(v){return str2arrayNumber(v); });
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){
 						return;
 					}
 					// CHECK MINIMAL CONDITIONS (WHETHER ITEM NUMBERS ARE MATCHING)
 					if(!isSameShape(oValues,inputValues)) return;
 					// TRYING DIFFERENT ARITHMETIC OPERATORS 
-					var validOperators = CrowdPlanner.findFormulaSingleParam(inputValues, oValues);
+					var validOperators = this.findFormulaSingleParam(inputValues, oValues);
 					_.each(validOperators, function(op){
-						Ps.push({
-							type: "arithmetic_single_param",
-							param: {
+						Ps.push(new Program("arithmetic_single_param",{
 								source: I_index,
 								inputIndex: ""+I_index,
 								operator: op[0],
 								operand: op[1],
-							}
-						});
+							}));
 					});
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I = previousSteps[P.param.source];
-				var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+			execute:function(previousSteps: string[][], P: Program) {
+				var I = previousSteps[P.param['source']];
+				var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 				return _.map(inputValues, function(v){return sum(v); });
 			},
 			unitTests: [
@@ -958,16 +916,16 @@ CrowdPlanner = {
 			]
 		},
 		arithmetic_two_params: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
-				var oValues = _.map(O, function(v){return str2array(v, "number"); });
+				var oValues = _.map(O, function(v){return str2arrayNumber(v); });
 				for(var I1_index in Is) {
 					for(var I2_index in Is) {
 						if(I1_index==I2_index) continue;
 						var I1 = Is[I1_index];	var I2 = Is[I2_index];
 						try {
-							var I1_values = _.map(I1, function(iv){ return str2array(iv, "number"); });
-							var I2_values = _.map(I2, function(iv){ return str2array(iv, "number"); });
+							var I1_values = _.map(I1, function(iv){ return str2arrayNumber(iv); });
+							var I2_values = _.map(I2, function(iv){ return str2arrayNumber(iv); });
 						} catch(e){
 							continue;
 						}
@@ -976,35 +934,32 @@ CrowdPlanner = {
 						var flat_I1_values = _.flatten(I1_values);
 						var flat_I2_values = _.flatten(I2_values);
 						var flat_output_values = _.flatten(oValues);
-						for (var iArith in CrowdPlanner.helper_arithmetic) {
+						for (var iArith in this.helper_arithmetic) {
 							// SKIP FOR I1 + I2 where I2 < I1:  TO REDUCE REDUNDANT PROGRAMS
 							if(I1_index>I2_index && (iArith=="+" || iArith=="*")) continue;
-							var arith_func = CrowdPlanner.helper_arithmetic[iArith].execute;
+							var arith_func = this.helper_arithmetic[iArith].execute;
 							var simulated_output = _.map(flat_I1_values, function(vvv,i) {
 								return arith_func(flat_I1_values[i],flat_I2_values[i]);
 							});
 							if(isSameArray(flat_output_values, simulated_output)) {
-								Ps.push({
-									type:"arithmetic_two_params",
-									param: {
+								Ps.push(new Program("arithmetic_two_params",{
 										operator: iArith,
 										operand_A: I1_index,
 										operand_B: I2_index,
 										inputIndex: ""+I1_index+","+I2_index
-									}
-								});
+									}));
 							}
 						}
 					}
 				}
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
-				var I1 = previousSteps[P.param.operand_A];
-				var I2 = previousSteps[P.param.operand_B];
-				var I1_val = _.map(I1, function(iv){ return str2array(iv, "number"); });
-				var I2_val = _.map(I2, function(iv){ return str2array(iv, "number"); });
-				var arith_func = CrowdPlanner.helper_arithmetic[P.param.operator].execute;
+			execute:function(previousSteps: string[][], P: Program) {
+				var I1 = previousSteps[P.param['operand_A']];
+				var I2 = previousSteps[P.param['operand_B']];
+				var I1_val = _.map(I1, function(iv){ return str2arrayNumber(iv); });
+				var I2_val = _.map(I2, function(iv){ return str2arrayNumber(iv); });
+				var arith_func = this.helper_arithmetic[P.param['operator']].execute;
 				return _.map(I1_val, function(v,i){return arith_func(I1_val[i],I2_val[i]); });
 			},
 			unitTests: [
@@ -1075,7 +1030,7 @@ CrowdPlanner = {
 			]
 		},
 		filter: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				var oValues = _.map(O, function(v){return str2array(v); });
 				if(Is.length<2) return [];
@@ -1086,7 +1041,7 @@ CrowdPlanner = {
 						var Pred = Is[idxPred];
 						var I_values = _.map(I, function(iv){ return str2array(iv); });
 						try {
-							var Pred_values = _.map(Pred, function(kv){ return str2array(kv,"boolean"); });	
+							var Pred_values = _.map(Pred, function(kv){ return str2arrayBoolean(kv); });	
 						} catch(e) {
 							continue;
 						}
@@ -1105,32 +1060,26 @@ CrowdPlanner = {
 						});
 						// CHECK IF TRUE FILTERED LIST MATCHES OUTPUT
 						if(isSameArray(true_filtered, oValues)) {
-							Ps.push({
-								type:"filter",
-								param: {
+							Ps.push(new Program("filter",{
 									source: idxI,
 									pred: idxPred,
 									inputIndex: ""+idxI+","+idxPred,
 									inverse:false
-								}
-							});
+								}));
 						}
 						if(isSameArray(true_filtered_inverse, oValues)) {
-							Ps.push({
-								type:"filter",
-								param: {
+							Ps.push(new Program("filter",{
 									source: idxI,
 									pred: idxPred,
 									inputIndex: ""+idxI+","+idxPred,
 									inverse:true
-								}
-							});
+								}));
 						}
 					}
 				}
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
+			execute:function(previousSteps: string[][], P: Program) {
 
 			},
 			unitTests: [
@@ -1169,9 +1118,9 @@ CrowdPlanner = {
 			]
 		},
 		boolean_operation: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
-				try{	var oValues = _.map(O, function(v){return str2array(v, "boolean"); });	
+				try{	var oValues = _.map(O, function(v){return str2arrayBoolean(v); });	
 				} catch(e) {	return Ps;		}
 				if(Is.length<2) return Ps;
 				for(var I1_index in Is) {
@@ -1179,8 +1128,8 @@ CrowdPlanner = {
 						if(I1_index>=I2_index) continue;
 						var I1 = Is[I1_index];	var I2 = Is[I2_index];
 						try {
-							var I1_values = _.map(I1, function(iv){ return str2array(iv, "boolean"); });
-							var I2_values = _.map(I2, function(iv){ return str2array(iv, "boolean"); });
+							var I1_values = _.map(I1, function(iv){ return str2arrayBoolean(iv); });
+							var I2_values = _.map(I2, function(iv){ return str2arrayBoolean(iv); });
 						} catch(e){
 							continue;
 						}
@@ -1188,28 +1137,25 @@ CrowdPlanner = {
 						var flat_I1_values = _.flatten(I1_values);
 						var flat_I2_values = _.flatten(I2_values);
 						var flat_output_values = _.flatten(oValues);
-						for (var iCond in CrowdPlanner.helper_boolean_operators) {
-							var cond_operator = CrowdPlanner.helper_boolean_operators[iCond];
+						for (var iCond in this.helper_boolean_operators) {
+							var cond_operator = this.helper_boolean_operators[iCond];
 							var simulated_output = _.map(flat_I1_values, function(vvv,i) {
 								return cond_operator(flat_I1_values[i],flat_I2_values[i]);
 							});
 							if(isSameArray(flat_output_values, simulated_output)) {
-								Ps.push({
-									type:"boolean_operation",
-									param: {
+								Ps.push(new Program("boolean_operation",{
 										operator: iCond,
 										booleanA: I1_index,
 										booleanB: I2_index,
 										inputIndex: ""+I1_index+","+I2_index
-									}
-								});
+									}));
 							}
 						}
 					}
 				}
 				return Ps;
 			},
-			execute:function(previousSteps, P) {	},
+			execute:function(previousSteps: string[][], P: Program) {	},
 			unitTests: [
 				{	inputs:[
 						["T,F,T", "T"], 
@@ -1246,35 +1192,32 @@ CrowdPlanner = {
 			]
 		},
 		number_test: {
-			generate: function(Is, O) {
+			generate: function(Is: string[][], O: string[]) : Program[] {
 				var Ps = [];
 				try{
-					var oValues = _.map(O, function(v){return str2array(v, "boolean"); });	
+					var oValues = _.map(O, function(v){return str2arrayBoolean(v); });	
 				} catch(e) {	
 					return Ps;	
 				}
 				_.each(Is, function(I,I_index){
 					try {
-						var inputValues = _.map(I, function(iv){ return str2array(iv, "number"); });
+						var inputValues = _.map(I, function(iv){ return str2arrayNumber(iv); });
 					} catch(e){	return;	}
 					if(!isSameShape(inputValues, oValues)) return;
 					// TRYING DIFFERENT CONDITIONAL OPERATORS 
-					var validConditionals = CrowdPlanner.findConditionals(inputValues, oValues);
+					var validConditionals = this.findConditionals(inputValues, oValues);
 					_.each(validConditionals, function(op){
-						Ps.push({
-							type: "number_test",
-							param: {
+						Ps.push(new Program("number_test",{
 								source: I_index,
 								inputIndex: ""+I_index,
 								operator: op[0],
 								operand: op[1] 
-							}
-						});
+							}));
 					});
 				});
 				return Ps;
 			},
-			execute:function(previousSteps, P) {
+			execute:function(previousSteps: string[][], P: Program) {
 
 			},
 			unitTests: [
@@ -1329,39 +1272,49 @@ CrowdPlanner = {
 		},
 		string_test: {
 			// contains.  
-			generate: function(Is, O) {
-
+			generate: function(Is: string[][], O: string[]) : Program[] {
+                return [];
 			},
-			execute:function(previousSteps, P) {
-
-			}
+			execute:function(previousSteps: string[][], P: Program) {
+                return;
+			},
+            unitTests: []
 		}
-	},
 
-	get_common_tokens : function(strList) {
-		var list_of_tokens = _.map(strList, function(v){return CrowdPlanner.get_tokens(v); });
+
+
+    }
+
+	private get_common_tokens(strList) {
+		var list_of_tokens = _.map(strList, function(v){return this.get_tokens(v); });
 		return _.intersection.apply(this, list_of_tokens);
-	},
-	get_tokens : function(str) {
+	}
+	private get_tokens(str) {
 		var basic = ['','____end_of_line___'];
 		var regex_split = /[,\.-:;=\s]/;
-		var bag_of_words = _.without(str.split(regex_split), false, undefined, "");
+		var bag_of_words_raw = str.split(regex_split);  // , false, undefined, "");
+        var bag_of_words = [];
+        for(let word of bag_of_words_raw) {
+            if(word != false && word != undefined && word != "") bag_of_words.push(word);
+        } 
 		var bag_of_letters = _.unique(_.map(str, function(v){return v;}));
 		var split_tokens = _.filter([',','\.','-',':',';',' '], function(t) { return str.indexOf(t)!=-1; });
 		return _.union(basic,bag_of_words,bag_of_letters,split_tokens);
-	},
-	helper_conditional: function(op1, op2, operator) {
+	}
+	public helper_conditional(op1, op2, operator) {
 		if(operator=="<") return op1<op2;
 		if(operator==">") return op1>op2;
 		if(operator=="==") return op1==op2;
 		if(operator=="%") return op1%op2==0;
 		if(operator=="!%") return op1%op2!=0;
-	},
-	helper_boolean_operators: {
+	}
+
+	public helper_boolean_operators = {
 		"AND": function(b1,b2) { return b1 && b2;},
 		"OR": function(b1,b2) { return b1 || b2;}
-	},
-	helper_arithmetic: {
+	}; 
+
+	public helper_arithmetic = {
 		"+": {		
 			execute:function(op1, op2) { return parseFloat(op1)+parseFloat(op2); }
 		},
@@ -1377,8 +1330,9 @@ CrowdPlanner = {
 		"%": {		
 			execute:function(op1, op2) { return parseFloat(op1)%parseFloat(op2); }
 		}
-	},
-	findConditionals: function(inList, outList) {
+	};
+
+	private findConditionals (inList, outList) {
 		// inList:  [  [1,2], [3,4,5] , ...]
 		// outList: [  [true,false], [true,false,...], ...]
 		// return.  ["<=", 5] or ["%!"]
@@ -1397,15 +1351,16 @@ CrowdPlanner = {
 			for(var iOperand in operands) {
 				var operand = operands[iOperand];
 				if(_.every(flatOutputValues, function(out, i) {
-					return CrowdPlanner.helper_conditional(flatInputValues[i], operand, operator) == out;
+					return this.helper_conditional(flatInputValues[i], operand, operator) == out;
 				})) {
 					formulas.push([operator, operand]);
 				}
 			}
 		} 
 		return formulas;
-	},
-	findFormulaSingleParam: function(inList, outList) {
+	};
+
+	private findFormulaSingleParam(inList, outList) {
 		// GENERATE CANDIDATE RANGE OF OPERANDS
 		// inLIst and outList:  [ [1,2,3], ...   ]
 		var formulas = [];
@@ -1414,8 +1369,8 @@ CrowdPlanner = {
 		var max_val = _.max(_.flatten([inList,outList]));
 		var cand_operands = _.range(max_val*-2, max_val*2);
 		// TRY COMBINATIONS OF OPEARTION AND OPERANDS
-		for(var iAr in CrowdPlanner.helper_arithmetic) {
-			var arithmeticFunc = CrowdPlanner.helper_arithmetic[iAr].execute;
+		for(var iAr in this.helper_arithmetic) {
+			var arithmeticFunc = this.helper_arithmetic[iAr].execute;
 			for(var iOperand in cand_operands) {
 				var operand = cand_operands[iOperand];
 				if(_.every(flatOutputValues, function(out, i) {
@@ -1432,65 +1387,10 @@ CrowdPlanner = {
 			return true;
 		})
 		return formulas;
-	}
-
-};
-
-
-/*  
-
-* 스터디 상에서 프로그램을 실행하는 경우는 없다. 그래도 실행 가능하긴 해야함.  
-
-Input+1
-	Similar programs: Input [*,+,-,/,%] n, 
-	* 중복 예시를 제공하는 경우는 여러 프로그램이 생성되었으니 예시를 더 달라는 피드백으로 반격
-	* 실수로 input이랑 output이 안 맞는 경우가 있다.  그럴 때는 fail만 보여주자. 만들어야하는 프로그램을 컴퓨터가 미리 알고서 피드백을 준다는 설정은 말이 안됨.  
-
-(Input+1)*2
-	* 기본적으로 arithmetic은 1-step만 처리한다. 
-	* 두 step에 대해서 사칙연산들은 전부 후보로 적용됨. 
-
-(Input+1) * (Input-1)
-	* Step을 늘려야하는지 Case를 늘려야하는지 몰라서 헤매는 경우가 있다. 
-	* 각 스탭별로 피드백을 줌. (Input제외; Step이랑 Output만)
-		1. 현재 스텝에 해당하는 P를 찾을 수가 없다면? --> No program is found for this step. You can try different examples or add a step above.  
-		2. 현재 스탭에 해당하는 P가 여러개라면? --> Multiple programs that calculate examples of the step are found. To teach a unique program, you can add more cases or modify current examples.
-		3. Unique한 P를 찾았다면? --> A unique program that calculate exampels of the step is found. 
-		4. Exception이 발생했다면? 
-			Value대신 formula나 description을 적은 경우 --> Text로 처리할 것이기 때문에 방법이 없음. (1)로. 
-
-Sort Input in ascending order
-	* 이건 괜찮은 예시
-
-Count
-	* Text를 다루는 첫 예시. 
-	* 주어진 예시만으로 끝나는 문제라 의미가 없음.
-	*** Text extraction으로 바꾸자. 뒤에 나오는 Jane:Art:87 같은 거 써서. 
-
-Count without space or numbers
-	Similar programs: Count, Count without space, Count without numbers
-	* 이거 task로 좋음.  차라리 text replace를 가르쳐주고, 실제 task로 이걸 쓰자.  함정에 빠뜨리기 위해서는 아예 예시를 주지 않거나, number만 포함하는 경우로 주자. 아니면 task를 count alphabets only로 하덩가. 
-
-Filter text by length
-	* 이것도 task로 옮기자. 
-	* 대신 true/false 만드는 Predicate을 연습시키자.  
-
-Nested-list
-	* okay.
-
---- 실제 태스크
-Art 스코어 min,max만 뽑기 
-	* 
-(TBD)
+	};
 
 
 
-
-	
-
+}
 
 
-
-
-
-*/

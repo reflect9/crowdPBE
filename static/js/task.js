@@ -1,24 +1,14 @@
-// task_id_list = _.shuffle(["task_group_score","task_extract","task_sort","task_reduce","task_conditional_replace"]);
 task_id_list = _.filter(_.keys(pbeTasks), function(k){return k.indexOf("task")!=-1; });
-// MESSAGE_INSUFFICIENT_EXAMPLES = "Insufficient examples. You can provide more cases or elaborate current examples. ";
-// MESSAGE_INSUFFICIENT_STEPS = "Failed to find a program matching with the examples. It might need more steps?";
-// FEEDBACK FOR INDIVIDUAL STEPS
 MESSAGE_STEP_FAIL = `<i class='fa fa-ban' aria-hidden='true'></i>
 						Found no program that calculates this step for one of the above steps.`;
 MESSAGE_STEP_WARNING = `<i class='fa fa-exclamation-circle' aria-hidden='true'></i>
 						Found [minimum_num_prog] programs that calculate this step.`;
 MESSAGE_STEP_SUCCESS = `<i class='fa fa-check-circle' aria-hidden='true'></i>
 						Found a single program that calcuates the step.`;
-// FEEDBACK FOR ALL STEPS
 MESSAGE_AMBIGUOUS_STEPS = "<i class='fa fa-ban' aria-hidden='true'></i> For at least one step, the computer found no program or multiple programs. Try to teach a single program for each step.";
-// MESSAGE_EXCEPTION = "Unexpected error. Make sure values have no typo.";
-// TESTING PROGRAM
 MESSAGE_PASS = "<i class='fa fa-check-circle' aria-hidden='true'></i>The computer learned the correct program.";
 MESSAGE_EXAMPLES_INCONSISTENT_WITH_PROGRAM = "<i class='fa fa-ban' aria-hidden='true'></i> An inconsistent set of programs was returned for the different examples provided.";
-//
 MODE_EXPERIMENTAL = "experimental";
-
-//
 REQUIRED_MINUTES = 3;
 REQUIRED_TRIALS = 8;
 
